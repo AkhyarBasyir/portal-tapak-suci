@@ -25,6 +25,7 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 - Arsip dokumen dengan tombol unduh
 
 ### Dashboard (setelah login)
+- **Halaman masuk yang elegan dan responsif**: pemilih peran interaktif, tampilkan/sembunyikan kata sandi, peringatan Caps Lock, serta opsi mengingat username (kata sandi tidak pernah disimpan)
 - **Ringkasan** statistik
 - CRUD **Anggota & jabatan**
 - CRUD **Jadwal latihan/kegiatan**
