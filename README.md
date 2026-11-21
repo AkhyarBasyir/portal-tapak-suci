@@ -24,7 +24,7 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 - **Jadwal latihan di beranda** diambil langsung dari `program_latihan`, sehingga perubahan admin langsung tampil
 - Berita & pengumuman + halaman detail per artikel
 - Jadwal kegiatan
-- **Program Latihan**: tab **Umum** (jadwal, macam program, target, filter jenis & pencarian) dan tab **Khusus** (hanya untuk anggota yang ditunjuk admin, dengan status sudah dibaca)
+- **Program Latihan**: tab **Umum** (jadwal, macam program, target, filter jenis & pencarian) dan tab **Khusus** (tombol hanya muncul untuk anggota/pengurus/admin yang login; isi hanya untuk anggota yang ditunjuk admin, dengan status sudah dibaca). Beranda dan area publik hanya menampilkan program dengan jenis Umum, tanpa filter sub-jenis.
 - Profil anggota aktif
 - Galeri foto
 - Arsip dokumen dengan tombol unduh

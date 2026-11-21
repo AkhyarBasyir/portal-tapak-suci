@@ -165,20 +165,22 @@ export default function ProgramLatihanView({ umum, khusus, penerima, profile }: 
             >
               <Dumbbell size={16} /> Program Umum
             </button>
-            <button
-              type="button"
-              onClick={() => setTab('khusus')}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition ${
-                tab === 'khusus' ? 'bg-brand-600 text-white' : 'text-slate-600 hover:bg-slate-50'
-              }`}
-            >
-              <ShieldCheck size={16} /> Program Khusus
-              {profile && belumDibaca > 0 && (
-                <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[11px] font-bold text-brand-700">
-                  {belumDibaca}
-                </span>
-              )}
-            </button>
+            {profile && (
+              <button
+                type="button"
+                onClick={() => setTab('khusus')}
+                className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition ${
+                  tab === 'khusus' ? 'bg-brand-600 text-white' : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <ShieldCheck size={16} /> Program Khusus
+                {belumDibaca > 0 && (
+                  <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[11px] font-bold text-brand-700">
+                    {belumDibaca}
+                  </span>
+                )}
+              </button>
+            )}
           </div>
           {(profile?.role === 'admin' || profile?.role === 'pengurus') && (
             <Link href="/dashboard/program-latihan" className="btn-outline text-sm">

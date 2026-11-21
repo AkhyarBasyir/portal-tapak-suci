@@ -15,12 +15,13 @@ export const metadata = {
 }
 
 export default async function ProgramLatihanPage() {
-  const [programUmum, programKhusus, session] = await Promise.all([
+  const [programUmum, session] = await Promise.all([
     getProgramLatihanUmum(true),
-    getProgramKhusus(),
     getSessionProfile(),
   ])
 
+  // Program khusus dan daftar penerimanya hanya diambil untuk anggota/pengurus/admin yang login.
+  const programKhusus = session ? await getProgramKhusus() : []
   const penerima = session ? await getPenerimaSaya(session.profile.id) : []
 
   return (
