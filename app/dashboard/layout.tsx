@@ -9,6 +9,7 @@ import {
   Gauge,
   HeartHandshake,
   Images,
+  KeyRound,
   LayoutDashboard,
   LayoutTemplate,
   Medal,
@@ -18,6 +19,7 @@ import {
   Shield,
   Ticket,
   Trophy,
+  UserPlus,
   Users,
   Wallet,
   type LucideIcon,
@@ -37,6 +39,8 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: '/dashboard', label: 'Ringkasan', icon: LayoutDashboard },
+  { href: '/dashboard/tambah-anggota', label: 'Tambah Anggota', icon: UserPlus, minRole: 'admin' },
+  { href: '/dashboard/ganti-password', label: 'Ganti Password', icon: KeyRound },
   { href: '/dashboard/raport-saya', label: 'Raport Saya', icon: FileText },
   { href: '/dashboard/raport_atlet', label: 'Raport Atlet', icon: FileBarChart2, minRole: 'pengurus' },
   { href: '/dashboard/raport_pengukuran', label: 'Pengukuran Fisik', icon: Activity, minRole: 'pengurus' },

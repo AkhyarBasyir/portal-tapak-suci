@@ -523,10 +523,7 @@ export default async function HomePage() {
                     </span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="inline-flex rounded-full bg-brand-50 px-2.5 py-1 text-[10px] font-bold text-brand-700">
-                      {item.jenis || 'Latihan'}
-                    </span>
-                    <h3 className="mt-2 line-clamp-2 font-bold leading-snug text-slate-900 group-hover:text-brand-700">
+                    <h3 className="line-clamp-2 font-bold leading-snug text-slate-900 group-hover:text-brand-700">
                       {item.judul}
                     </h3>
                     <div className="mt-3 space-y-1.5 text-[11px] text-slate-500">

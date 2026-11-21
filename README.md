@@ -40,6 +40,8 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 - CRUD **Dokumen & galeri** (upload file/foto)
 - CRUD **Keuangan & kas** (bukti transaksi di bucket privat)
 - CRUD **Iuran anggota**
+- **Tambah Anggota** (khusus admin): membuat akun login, profil, dan data anggota sekaligus
+- **Ganti Password**: semua peran dapat mengubah password sendiri; admin juga dapat mengganti password anggota/admin lain
 - **Raport Saya** (`/dashboard/raport-saya`): raport atlet dengan grafik radar dan garis, pengukuran fisik (tinggi, berat, lingkar tubuh, denyut nadi), performa (power, kecepatan, VO2 max, teknik, strategi, mental), prestasi, penilaian kepribadian 12 aspek, tombol **Simpan PDF** (print) dan **Unduh Raport** (HTML)
 - CRUD raport untuk pengurus: **Raport Atlet**, **Pengukuran Fisik**, **Performa Atlet**, **Prestasi Atlet**, dan **Kepribadian**
 - Kelola **Pengguna & hak akses** (khusus admin)
@@ -121,7 +123,7 @@ set role = 'pengurus'
 where email = 'email-pengurus@example.com';
 ```
 
-> Catatan: Halaman `/register` otomatis membuat akun dengan peran **anggota**. Peran hanya bisa diangkat menjadi pengurus/admin oleh admin melalui menu **Dashboard → Pengguna** atau SQL di atas.
+> Catatan: Halaman `/register` otomatis membuat akun dengan peran **anggota**. Admin juga bisa membuat akun lengkap lewat **Dashboard → Tambah Anggota**. Peran bisa diangkat menjadi pengurus/admin melalui menu **Dashboard → Pengguna** atau SQL di atas.
 
 ## Langkah 3 — Isi environment variable
 
@@ -136,7 +138,10 @@ Ambil nilai dari **Supabase → Project Settings → API**:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...
 ```
+
+`SUPABASE_SERVICE_ROLE_KEY` dipakai hanya di server untuk fitur admin **Tambah Anggota** dan **Ganti Password pengguna**. Jangan pernah diberi awalan `NEXT_PUBLIC_` karena kunci ini tidak boleh sampai ke browser.
 
 ## Langkah 4 — Jalankan di komputer (hanya untuk development)
 
@@ -153,9 +158,10 @@ Buka http://localhost:3000.
 
 1. Push proyek ini ke GitHub/GitLab.
 2. Buka https://vercel.com → **Add New → Project** → import repository.
-3. Pada **Environment Variables**, tambahkan dua variabel yang sama:
+3. Pada **Environment Variables**, tambahkan variabel yang sama:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY` (tanpa `NEXT_PUBLIC_`; dipakai untuk fitur admin)
 4. Klik **Deploy**.
 5. Setelah selesai, Vercel memberi URL seperti `https://portal-tapak-suci.vercel.app`.
 6. (Opsional) Tambahkan domain sendiri di **Project Settings → Domains** dan arahkan DNS sesuai petunjuk Vercel.
