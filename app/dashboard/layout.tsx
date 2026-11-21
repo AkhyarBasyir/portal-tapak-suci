@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import {
   CalendarDays,
+  Dumbbell,
   Images,
   LayoutDashboard,
   Newspaper,
@@ -28,6 +29,7 @@ const navItems: NavItem[] = [
   { href: '/dashboard', label: 'Ringkasan', icon: LayoutDashboard },
   { href: '/dashboard/anggota', label: 'Anggota', icon: Users, minRole: 'pengurus' },
   { href: '/dashboard/kegiatan', label: 'Kegiatan', icon: CalendarDays, minRole: 'pengurus' },
+  { href: '/dashboard/program-latihan', label: 'Program Latihan', icon: Dumbbell, minRole: 'pengurus' },
   { href: '/dashboard/berita', label: 'Berita', icon: Newspaper, minRole: 'pengurus' },
   { href: '/dashboard/media', label: 'Dokumen & Galeri', icon: Images, minRole: 'pengurus' },
   { href: '/dashboard/keuangan', label: 'Keuangan', icon: Wallet, minRole: 'pengurus' },

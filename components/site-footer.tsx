@@ -16,6 +16,7 @@ export default function SiteFooter() {
           <div className="mt-2 space-y-1 text-sm text-slate-600">
             <Link href="/berita" className="block hover:text-brand-700">Berita</Link>
             <Link href="/kegiatan" className="block hover:text-brand-700">Kegiatan</Link>
+            <Link href="/program-latihan" className="block hover:text-brand-700">Program Latihan</Link>
             <Link href="/anggota" className="block hover:text-brand-700">Anggota</Link>
           </div>
         </div>

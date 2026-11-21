@@ -135,6 +135,63 @@ create table if not exists public.iuran (
   updated_at timestamptz not null default now()
 );
 
+-- Program latihan umum: dibaca semua pengguna, dikelola pengurus/admin.
+create table if not exists public.program_latihan (
+  id uuid primary key default gen_random_uuid(),
+  judul text not null,
+  jenis text not null default 'Latihan Reguler',
+  target text,
+  tanggal_mulai date not null,
+  tanggal_selesai date,
+  hari text,
+  jam_mulai time,
+  jam_selesai time,
+  lokasi text,
+  instruktur text,
+  kuota integer,
+  status text not null default 'Aktif',
+  deskripsi text,
+  gambar_url text,
+  created_by uuid references auth.users(id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- Program latihan khusus: hanya terlihat oleh penerima yang ditentukan admin.
+create table if not exists public.program_khusus (
+  id uuid primary key default gen_random_uuid(),
+  judul text not null,
+  jenis text not null default 'Latihan Khusus',
+  target text,
+  tanggal_mulai date not null,
+  tanggal_selesai date,
+  hari text,
+  bulan text,
+  jam_mulai time,
+  jam_selesai time,
+  lokasi text,
+  instruktur text,
+  kirim_ke_semua boolean not null default false,
+  status text not null default 'Aktif',
+  deskripsi text,
+  gambar_url text,
+  created_by uuid references auth.users(id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- Penerima program khusus: satu baris per pengguna yang ditunjuk.
+create table if not exists public.program_khusus_penerima (
+  id uuid primary key default gen_random_uuid(),
+  program_id uuid not null references public.program_khusus(id) on delete cascade,
+  profil_id uuid not null references public.profiles(id) on delete cascade,
+  dibaca_at timestamptz,
+  created_at timestamptz not null default now(),
+  unique (program_id, profil_id)
+);
+create index if not exists program_khusus_penerima_profil_idx
+  on public.program_khusus_penerima (profil_id);
+
 -- ----------------------------------------------------------------------------
 -- Helper functions
 -- ----------------------------------------------------------------------------
@@ -248,7 +305,7 @@ do $$
 declare
   t text;
 begin
-  foreach t in array array['profiles','anggota','kegiatan','berita','media','keuangan','iuran'] loop
+  foreach t in array array['profiles','anggota','kegiatan','berita','media','keuangan','iuran','program_latihan','program_khusus'] loop
     execute format('drop trigger if exists touch_updated_at on public.%I', t);
     execute format(
       'create trigger touch_updated_at before update on public.%I for each row execute function public.touch_updated_at()',
@@ -390,6 +447,78 @@ drop policy if exists iuran_delete on public.iuran;
 create policy iuran_delete on public.iuran
   for delete to authenticated using (public.is_pengurus());
 
+alter table public.program_latihan enable row level security;
+alter table public.program_khusus enable row level security;
+alter table public.program_khusus_penerima enable row level security;
+
+-- program_latihan: semua orang boleh membaca, pengurus/admin mengelola
+drop policy if exists program_latihan_select on public.program_latihan;
+create policy program_latihan_select on public.program_latihan
+  for select using (true);
+
+drop policy if exists program_latihan_insert on public.program_latihan;
+create policy program_latihan_insert on public.program_latihan
+  for insert to authenticated with check (public.is_pengurus());
+
+drop policy if exists program_latihan_update on public.program_latihan;
+create policy program_latihan_update on public.program_latihan
+  for update to authenticated using (public.is_pengurus()) with check (public.is_pengurus());
+
+drop policy if exists program_latihan_delete on public.program_latihan;
+create policy program_latihan_delete on public.program_latihan
+  for delete to authenticated using (public.is_pengurus());
+
+-- program_khusus: hanya admin yang mengelola; hanya penerima (atau semua anggota
+-- bila kirim_ke_semua) yang melihat. Pengurus/admin selalu melihat untuk keperluan pantauan.
+drop policy if exists program_khusus_select on public.program_khusus;
+create policy program_khusus_select on public.program_khusus
+  for select using (
+    public.is_pengurus()
+    or (
+      auth.uid() is not null
+      and status = 'Aktif'
+      and (
+        kirim_ke_semua
+        or exists (
+          select 1 from public.program_khusus_penerima p
+          where p.program_id = program_khusus.id
+            and p.profil_id = auth.uid()
+        )
+      )
+    )
+  );
+
+drop policy if exists program_khusus_insert on public.program_khusus;
+create policy program_khusus_insert on public.program_khusus
+  for insert to authenticated with check (public.is_admin());
+
+drop policy if exists program_khusus_update on public.program_khusus;
+create policy program_khusus_update on public.program_khusus
+  for update to authenticated using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists program_khusus_delete on public.program_khusus;
+create policy program_khusus_delete on public.program_khusus
+  for delete to authenticated using (public.is_admin());
+
+-- penerima: anggota melihat/tandai dibaca miliknya saja, admin mengelola seluruhnya
+drop policy if exists program_khusus_penerima_select on public.program_khusus_penerima;
+create policy program_khusus_penerima_select on public.program_khusus_penerima
+  for select using (profil_id = auth.uid() or public.is_pengurus());
+
+drop policy if exists program_khusus_penerima_insert on public.program_khusus_penerima;
+create policy program_khusus_penerima_insert on public.program_khusus_penerima
+  for insert to authenticated with check (public.is_admin());
+
+drop policy if exists program_khusus_penerima_update on public.program_khusus_penerima;
+create policy program_khusus_penerima_update on public.program_khusus_penerima
+  for update to authenticated
+  using (profil_id = auth.uid() or public.is_admin())
+  with check (profil_id = auth.uid() or public.is_admin());
+
+drop policy if exists program_khusus_penerima_delete on public.program_khusus_penerima;
+create policy program_khusus_penerima_delete on public.program_khusus_penerima
+  for delete to authenticated using (public.is_admin());
+
 -- ----------------------------------------------------------------------------
 -- Storage buckets & policies
 -- ----------------------------------------------------------------------------
@@ -483,6 +612,26 @@ insert into public.iuran (anggota_id, periode, jumlah, status, tanggal_bayar)
 select (select id from public.anggota where nip = 'TS-2026-001'), 'November 2026', 150000, 'lunas', '2026-11-05'
 where exists (select 1 from public.anggota where nip = 'TS-2026-001')
   and not exists (select 1 from public.iuran where periode = 'November 2026' and anggota_id = (select id from public.anggota where nip = 'TS-2026-001'));
+
+insert into public.program_latihan
+  (judul, jenis, target, tanggal_mulai, tanggal_selesai, hari, jam_mulai, jam_selesai, lokasi, instruktur, kuota, status, deskripsi)
+select 'Latihan Dasar Pencak Silat', 'Latihan Reguler', 'Anggota baru usia 7 tahun ke atas', '2026-12-01', '2026-12-31', 'Senin, Rabu', '16:00', '18:00', 'Gedung Serbaguna Jakarta Pusat', 'Pelatih Tapak Suci', 30, 'Aktif', 'Pembentukan dasar gerak, sikap, dan etika pencak silat untuk anggota baru.'
+where not exists (select 1 from public.program_latihan where judul = 'Latihan Dasar Pencak Silat');
+
+insert into public.program_latihan
+  (judul, jenis, target, tanggal_mulai, tanggal_selesai, hari, jam_mulai, jam_selesai, lokasi, instruktur, kuota, status, deskripsi)
+select 'Latihan Lanjutan Teknik Serangan', 'Latihan Lanjutan', 'Anggota jenjang Madya dan Utama', '2026-12-05', '2027-01-20', 'Sabtu', '09:00', '12:00', 'Aula Cabang Jakarta Selatan', 'Ahmad Fauzi', 20, 'Aktif', 'Penyempurnaan teknik serangan, tangkapan, dan strategi pertandingan.'
+where not exists (select 1 from public.program_latihan where judul = 'Latihan Lanjutan Teknik Serangan');
+
+insert into public.program_latihan
+  (judul, jenis, target, tanggal_mulai, tanggal_selesai, hari, jam_mulai, jam_selesai, lokasi, instruktur, kuota, status, deskripsi)
+select 'Pembinaan Mental dan Disiplin', 'Pembinaan', 'Seluruh anggota aktif', '2027-01-03', '2027-01-31', 'Minggu', '08:00', '10:00', 'Lapangan Cabang Jakarta Timur', 'Dewi Anggraini', 40, 'Aktif', 'Penguatan karakter, disiplin, dan nilai-nilai kekeluargaan Tapak Suci.'
+where not exists (select 1 from public.program_latihan where judul = 'Pembinaan Mental dan Disiplin');
+
+insert into public.program_khusus
+  (judul, jenis, target, tanggal_mulai, tanggal_selesai, hari, bulan, jam_mulai, jam_selesai, lokasi, instruktur, kirim_ke_semua, status, deskripsi)
+select 'Persiapan Khusus Pertandingan Antar Cabang', 'Latihan Intensif', 'Anggota yang akan bertanding', '2026-12-10', '2026-12-24', 'Selasa, Kamis, Sabtu', 'Desember', '15:30', '18:00', 'Gedung Serbaguna Jakarta Pusat', 'Tim Pelatih Tapak Suci', true, 'Aktif', 'Program intensif persiapan pertandingan antar cabang: sparring terkontrol, strategi, dan pengukuran performa.'
+where not exists (select 1 from public.program_khusus where judul = 'Persiapan Khusus Pertandingan Antar Cabang');
 
 -- ============================================================================
 -- Selesai. Selanjutnya: buat user pertama dan angkat menjadi admin.

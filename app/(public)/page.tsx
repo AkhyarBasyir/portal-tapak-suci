@@ -257,6 +257,12 @@ export default async function HomePage() {
                 </p>
               </div>
             </div>
+            <Link
+              href="/program-latihan"
+              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+            >
+              Lihat Program Latihan →
+            </Link>
           </div>
         </div>
       </section>

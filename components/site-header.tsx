@@ -4,6 +4,7 @@ const nav = [
   { href: '/', label: 'Beranda' },
   { href: '/berita', label: 'Berita' },
   { href: '/kegiatan', label: 'Kegiatan' },
+  { href: '/program-latihan', label: 'Program Latihan' },
   { href: '/anggota', label: 'Anggota' },
   { href: '/galeri', label: 'Galeri' },
   { href: '/dokumen', label: 'Dokumen' },

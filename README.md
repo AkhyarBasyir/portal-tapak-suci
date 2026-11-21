@@ -19,6 +19,7 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 - **Portal awal / beranda** berisi informasi resmi Tapak Suci, visi misi, motto, kontak, statistik, berita terbaru, agenda, dan **pilihan login untuk Admin / Pengurus / Anggota**
 - Berita & pengumuman + halaman detail per artikel
 - Jadwal kegiatan
+- **Program Latihan**: tab **Umum** (jadwal, macam program, target, filter jenis & pencarian) dan tab **Khusus** (hanya untuk anggota yang ditunjuk admin, dengan status sudah dibaca)
 - Profil anggota aktif
 - Galeri foto
 - Arsip dokumen dengan tombol unduh
@@ -27,6 +28,7 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 - **Ringkasan** statistik
 - CRUD **Anggota & jabatan**
 - CRUD **Jadwal latihan/kegiatan**
+- **Kelola Program Latihan** (`/dashboard/program-latihan`): form lengkap untuk program umum dan khusus, pilih hari/bulan, rentang tanggal, jam, target, kuota, upload gambar, serta kirim ke semua anggota atau beberapa akun tertentu
 - CRUD **Berita & pengumuman**
 - CRUD **Dokumen & galeri** (upload file/foto)
 - CRUD **Keuangan & kas** (bukti transaksi di bucket privat)
@@ -39,6 +41,8 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 | --- | --- | --- | --- | --- |
 | Anggota | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat yang Aktif |
 | Kegiatan | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat |
+| Program latihan umum | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat |
+| Program latihan khusus | Tambah/Ubah/Hapus | Lihat saja | Lihat yang ditujukan padanya | Tidak bisa lihat |
 | Berita | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat yang diterbitkan |
 | Dokumen & galeri | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat |
 | Keuangan | Tambah/Ubah/Hapus | Tambah/Ubah | Lihat | Tidak bisa lihat |

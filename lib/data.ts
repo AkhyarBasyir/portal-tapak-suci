@@ -111,13 +111,76 @@ export async function getMediaByType(tipe: 'galeri' | 'dokumen') {
   )
 }
 
+export async function getProgramLatihanUmum() {
+  const supabase = await getClient()
+  if (!supabase) return []
+  return safeFetch<any>(
+    supabase
+      .from('program_latihan')
+      .select('*')
+      .eq('status', 'Aktif')
+      .order('tanggal_mulai', { ascending: true }) as any,
+  )
+}
+
+// RLS pada program_khusus otomatis membatasi hasil: admin/pengurus melihat semua,
+// anggota hanya program yang ditujukan kepadanya (atau kirim_ke_semua).
+export async function getProgramKhusus() {
+  const supabase = await getClient()
+  if (!supabase) return []
+  return safeFetch<any>(
+    supabase
+      .from('program_khusus')
+      .select('*')
+      .order('tanggal_mulai', { ascending: true }) as any,
+  )
+}
+
+export async function getPenerimaSaya(profilId: string) {
+  const supabase = await getClient()
+  if (!supabase) return []
+  return safeFetch<any>(
+    supabase
+      .from('program_khusus_penerima')
+      .select('id, program_id, profil_id, dibaca_at, created_at')
+      .eq('profil_id', profilId) as any,
+  )
+}
+
+export async function getCalonPenerima() {
+  const supabase = await getClient()
+  if (!supabase) return []
+  return safeFetch<any>(
+    supabase
+      .from('profiles')
+      .select('id, full_name, email, role, jabatan')
+      .order('full_name', { ascending: true }) as any,
+  )
+}
+
 export async function getDashboardStats() {
   const supabase = await getClient()
   if (!supabase) {
-    return { anggota: 0, kegiatan: 0, berita: 0, media: 0, iuran: 0 }
+    return {
+      anggota: 0,
+      kegiatan: 0,
+      berita: 0,
+      media: 0,
+      iuran: 0,
+      program_latihan: 0,
+      program_khusus: 0,
+    }
   }
 
-  const tables = ['anggota', 'kegiatan', 'berita', 'media', 'iuran']
+  const tables = [
+    'anggota',
+    'kegiatan',
+    'berita',
+    'media',
+    'iuran',
+    'program_latihan',
+    'program_khusus',
+  ]
   const counts = await Promise.all(
     tables.map((table) =>
       supabase.from(table).select('*', { count: 'exact', head: true }),
