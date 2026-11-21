@@ -110,6 +110,27 @@ export default function CrudManager({
       values.tanggal = new Date().toISOString().slice(0, 10)
     }
     if (config.key === 'iuran') values.status = 'belum'
+    if (config.key === 'beranda_konten') {
+      values.status = 'Aktif'
+      values.urutan = 0
+    }
+    if (config.key === 'sanggar_fokus') {
+      values.status = 'Aktif'
+      values.urutan = 0
+      values.ikon = 'Sparkles'
+    }
+    if (config.key === 'sanggar_penampilan') {
+      values.status = 'Aktif'
+      values.jenis = 'Sendratari'
+      values.tanggal_mulai = new Date().toISOString().slice(0, 10)
+    }
+    if (config.key === 'prestasi') {
+      values.status = 'Aktif'
+      values.kategori = 'Gelanggang'
+      values.tingkat = 'Cabang'
+      values.tanggal = new Date().toISOString().slice(0, 10)
+      values.urutan = 0
+    }
     return values
   }
 

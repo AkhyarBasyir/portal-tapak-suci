@@ -6,6 +6,17 @@ const JENJANG = ['Pengenal', 'Penggalang', 'Pembina', 'Muda', 'Madya', 'Utama', 
 const JABATAN = ['Ketua', 'Wakil Ketua', 'Sekretaris', 'Bendahara', 'Pelatih', 'Instruktur', 'Anggota']
   .map((value) => ({ value, label: value }))
 
+const STATUS_TAMPIL = ['Aktif', 'Nonaktif'].map((value) => ({ value, label: value }))
+const STATUS_PRESTASI = ['Aktif', 'Arsip'].map((value) => ({ value, label: value }))
+const KATEGORI_PRESTASI = ['Gelanggang', 'Seni Pertunjukan', 'Organisasi', 'Lainnya']
+  .map((value) => ({ value, label: value }))
+const TINGKAT_PRESTASI = ['Cabang', 'Kabupaten', 'Provinsi', 'Nasional', 'Internasional']
+  .map((value) => ({ value, label: value }))
+const JENIS_PENAMPILAN = ['Sendratari', 'Penampilan', 'Tradisi Pencak Silat', 'Sosiodrama', 'Lainnya']
+  .map((value) => ({ value, label: value }))
+const IKON_FOKUS = ['Drama', 'Sparkles', 'Swords', 'Users', 'BookOpen', 'Trophy', 'Heart', 'Sparkle']
+  .map((value) => ({ value, label: value }))
+
 export const CRUD_CONFIGS: Record<string, CrudConfig> = {
   anggota: {
     key: 'anggota',
@@ -224,6 +235,127 @@ export const CRUD_CONFIGS: Record<string, CrudConfig> = {
     deleteRole: 'admin',
     disableCreate: true,
     hideDelete: true,
+  },
+
+  beranda_konten: {
+    key: 'beranda_konten',
+    table: 'beranda_konten',
+    title: 'Konten Beranda',
+    singular: 'Konten',
+    description: 'Atur teks, gambar, dan tautan yang tampil di halaman depan. Perubahan langsung tampil untuk pengunjung.',
+    fields: [
+      { name: 'kunci', label: 'Kunci Unik', type: 'text', required: true, placeholder: 'Contoh: hero_judul', help: 'Kunci yang digunakan halaman beranda, misalnya hero_judul, hero_deskripsi, sanggar_judul.' },
+      { name: 'judul', label: 'Judul / Teks Utama', type: 'text', required: true },
+      { name: 'subtitle', label: 'Subtitle', type: 'text' },
+      { name: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
+      { name: 'label_link', label: 'Teks Tombol', type: 'text', placeholder: 'Contoh: Kenali Sanggar' },
+      { name: 'link_url', label: 'Tautan Tombol', type: 'text', placeholder: '/sanggar atau https://...' },
+      { name: 'gambar_url', label: 'Gambar', type: 'image', bucket: 'media' },
+      { name: 'urutan', label: 'Urutan', type: 'number', help: 'Angka kecil tampil lebih dulu.' },
+      { name: 'status', label: 'Status', type: 'select', required: true, options: STATUS_TAMPIL },
+    ],
+    columns: [
+      { name: 'kunci', label: 'Kunci' },
+      { name: 'judul', label: 'Judul / Teks' },
+      { name: 'urutan', label: 'Urutan' },
+      { name: 'status', label: 'Status', type: 'badge' },
+    ],
+    orderBy: 'urutan',
+    ascending: true,
+    minRole: 'pengurus',
+    deleteRole: 'admin',
+  },
+
+  sanggar_fokus: {
+    key: 'sanggar_fokus',
+    table: 'sanggar_fokus',
+    title: 'Fokus Sanggar',
+    singular: 'Fokus',
+    description: 'Kelola fokus dan program Sanggar Seni Budaya Surya Manggala Integra.',
+    fields: [
+      { name: 'judul', label: 'Nama Fokus', type: 'text', required: true, placeholder: 'Contoh: Sendratari' },
+      { name: 'subtitle', label: 'Subtitle', type: 'text', placeholder: 'Contoh: Gerak yang bercerita' },
+      { name: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
+      { name: 'ikon', label: 'Ikon', type: 'select', options: IKON_FOKUS, help: 'Pilih ikon yang tampil di kartu fokus.' },
+      { name: 'gambar_url', label: 'Gambar Fokus', type: 'image', bucket: 'media' },
+      { name: 'urutan', label: 'Urutan', type: 'number' },
+      { name: 'status', label: 'Status', type: 'select', required: true, options: STATUS_TAMPIL },
+    ],
+    columns: [
+      { name: 'judul', label: 'Fokus' },
+      { name: 'subtitle', label: 'Subtitle' },
+      { name: 'ikon', label: 'Ikon' },
+      { name: 'urutan', label: 'Urutan' },
+      { name: 'status', label: 'Status', type: 'badge' },
+    ],
+    orderBy: 'urutan',
+    ascending: true,
+    minRole: 'pengurus',
+    deleteRole: 'admin',
+  },
+
+  sanggar_penampilan: {
+    key: 'sanggar_penampilan',
+    table: 'sanggar_penampilan',
+    title: 'Penampilan Sanggar',
+    singular: 'Penampilan',
+    description: 'Atur jadwal sendratari, pentas, tradisi pencak silat, dan sosiodrama.',
+    fields: [
+      { name: 'judul', label: 'Judul Penampilan', type: 'text', required: true },
+      { name: 'jenis', label: 'Jenis', type: 'select', required: true, options: JENIS_PENAMPILAN },
+      { name: 'tanggal_mulai', label: 'Tanggal Mulai', type: 'date', required: true },
+      { name: 'tanggal_selesai', label: 'Tanggal Selesai', type: 'date' },
+      { name: 'jam_mulai', label: 'Jam Mulai', type: 'text', placeholder: '19:00' },
+      { name: 'jam_selesai', label: 'Jam Selesai', type: 'text', placeholder: '21:00' },
+      { name: 'lokasi', label: 'Lokasi', type: 'text' },
+      { name: 'target', label: 'Target Penonton', type: 'text' },
+      { name: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
+      { name: 'gambar_url', label: 'Gambar', type: 'image', bucket: 'media' },
+      { name: 'status', label: 'Status', type: 'select', required: true, options: STATUS_TAMPIL },
+    ],
+    columns: [
+      { name: 'judul', label: 'Judul' },
+      { name: 'jenis', label: 'Jenis', type: 'badge' },
+      { name: 'tanggal_mulai', label: 'Tanggal', type: 'date' },
+      { name: 'lokasi', label: 'Lokasi' },
+      { name: 'status', label: 'Status', type: 'badge' },
+    ],
+    orderBy: 'tanggal_mulai',
+    ascending: true,
+    minRole: 'pengurus',
+    deleteRole: 'pengurus',
+  },
+
+  prestasi: {
+    key: 'prestasi',
+    table: 'prestasi',
+    title: 'Prestasi',
+    singular: 'Prestasi',
+    description: 'Catat prestasi gelanggang dan seni pertunjukan pentas untuk ditampilkan di beranda.',
+    fields: [
+      { name: 'judul', label: 'Judul Prestasi', type: 'text', required: true },
+      { name: 'kategori', label: 'Bidang', type: 'select', required: true, options: KATEGORI_PRESTASI },
+      { name: 'tingkat', label: 'Tingkat', type: 'select', required: true, options: TINGKAT_PRESTASI },
+      { name: 'nama_peserta', label: 'Atlet / Sanggar', type: 'text' },
+      { name: 'nama_sanggar', label: 'Nama Sanggar', type: 'text', placeholder: 'Surya Manggala Integra' },
+      { name: 'tanggal', label: 'Tanggal Diraih', type: 'date', required: true },
+      { name: 'penyelenggara', label: 'Penyelenggara', type: 'text' },
+      { name: 'deskripsi', label: 'Deskripsi', type: 'textarea' },
+      { name: 'gambar_url', label: 'Foto Prestasi', type: 'image', bucket: 'media' },
+      { name: 'urutan', label: 'Urutan', type: 'number' },
+      { name: 'status', label: 'Status', type: 'select', required: true, options: STATUS_PRESTASI },
+    ],
+    columns: [
+      { name: 'judul', label: 'Prestasi' },
+      { name: 'kategori', label: 'Bidang', type: 'badge' },
+      { name: 'tingkat', label: 'Tingkat', type: 'badge' },
+      { name: 'tanggal', label: 'Tanggal', type: 'date' },
+      { name: 'status', label: 'Status', type: 'badge' },
+    ],
+    orderBy: 'tanggal',
+    ascending: false,
+    minRole: 'pengurus',
+    deleteRole: 'pengurus',
   },
 }
 

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, CalendarDays, Dumbbell, FileText, Newspaper, ShieldCheck, Users, Wallet } from 'lucide-react'
+import { ArrowRight, CalendarDays, Dumbbell, FileText, Newspaper, ShieldCheck, Ticket, Trophy, Users, Wallet } from 'lucide-react'
 import { getSessionProfile } from '@/lib/auth'
 import { getDashboardStats, getProgramKhusus } from '@/lib/data'
 
@@ -27,6 +27,13 @@ export default async function DashboardPage() {
     { label: 'Berita', value: stats.berita ?? 0, icon: Newspaper, href: '/dashboard/berita' },
     { label: 'Dokumen & Galeri', value: stats.media ?? 0, icon: FileText, href: '/dashboard/media' },
     { label: 'Iuran', value: stats.iuran ?? 0, icon: Wallet, href: '/dashboard/iuran' },
+    { label: 'Prestasi', value: stats.prestasi ?? 0, icon: Trophy, href: '/dashboard/prestasi' },
+    {
+      label: 'Penampilan Sanggar',
+      value: stats.sanggar_penampilan ?? 0,
+      icon: Ticket,
+      href: '/dashboard/sanggar_penampilan',
+    },
   ]
 
   return (

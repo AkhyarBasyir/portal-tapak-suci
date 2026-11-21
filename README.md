@@ -16,7 +16,11 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 ## Fitur
 
 ### Halaman publik
-- **Portal awal / beranda** berisi informasi resmi Tapak Suci, visi misi, motto, kontak, statistik, berita terbaru, agenda, dan **pilihan login untuk Admin / Pengurus / Anggota**
+- **Beranda cinematic yang dinamis**: hero dengan foto & animasi, marquee, kartu "Dua Bidang, Satu Semangat", sorotan sanggar, jadwal latihan, prestasi, berita, dan pilihan login
+- **Dua bidang utama**: Prestasi di Gelanggang dan Seni Pertunjukan Pentas, masing-masing punya halaman khusus
+- **Sanggar Seni Budaya Surya Manggala Integra** (`/sanggar`): sendratari, penampilan, tradisi pencak silat, sosiodrama, dan pembinaan akhlak berlandaskan Al-Qur'an dan Sunnah, lengkap dengan jadwal penampilan
+- **Prestasi** (`/prestasi`) dikelompokkan menjadi gelanggang dan seni pertunjukan
+- **Jadwal latihan di beranda** diambil langsung dari `program_latihan`, sehingga perubahan admin langsung tampil
 - Berita & pengumuman + halaman detail per artikel
 - Jadwal kegiatan
 - **Program Latihan**: tab **Umum** (jadwal, macam program, target, filter jenis & pencarian) dan tab **Khusus** (hanya untuk anggota yang ditunjuk admin, dengan status sudah dibaca)

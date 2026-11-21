@@ -158,6 +158,57 @@ export async function getCalonPenerima() {
   )
 }
 
+export async function getBerandaKonten() {
+  const supabase = await getClient()
+  if (!supabase) return []
+  return safeFetch<any>(
+    supabase
+      .from('beranda_konten')
+      .select('*')
+      .eq('status', 'Aktif')
+      .order('urutan', { ascending: true }) as any,
+  )
+}
+
+export async function getSanggarFokus() {
+  const supabase = await getClient()
+  if (!supabase) return []
+  return safeFetch<any>(
+    supabase
+      .from('sanggar_fokus')
+      .select('*')
+      .eq('status', 'Aktif')
+      .order('urutan', { ascending: true }) as any,
+  )
+}
+
+export async function getSanggarPenampilan(limit = 6) {
+  const supabase = await getClient()
+  if (!supabase) return []
+  return safeFetch<any>(
+    supabase
+      .from('sanggar_penampilan')
+      .select('*')
+      .eq('status', 'Aktif')
+      .order('tanggal_mulai', { ascending: true })
+      .limit(limit) as any,
+  )
+}
+
+export async function getPrestasi(limit = 12) {
+  const supabase = await getClient()
+  if (!supabase) return []
+  return safeFetch<any>(
+    supabase
+      .from('prestasi')
+      .select('*')
+      .eq('status', 'Aktif')
+      .order('urutan', { ascending: true })
+      .order('tanggal', { ascending: false })
+      .limit(limit) as any,
+  )
+}
+
 export async function getDashboardStats() {
   const supabase = await getClient()
   if (!supabase) {
@@ -169,6 +220,9 @@ export async function getDashboardStats() {
       iuran: 0,
       program_latihan: 0,
       program_khusus: 0,
+      prestasi: 0,
+      sanggar_fokus: 0,
+      sanggar_penampilan: 0,
     }
   }
 
@@ -180,6 +234,9 @@ export async function getDashboardStats() {
     'iuran',
     'program_latihan',
     'program_khusus',
+    'prestasi',
+    'sanggar_fokus',
+    'sanggar_penampilan',
   ]
   const counts = await Promise.all(
     tables.map((table) =>

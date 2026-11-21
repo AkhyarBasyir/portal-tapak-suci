@@ -72,6 +72,63 @@
   .auth-input {
     @apply input h-12 rounded-xl border-slate-200 bg-white/90 text-[15px] shadow-sm transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-100;
   }
+
+  /* Beranda dinamis */
+  .showcase-glass {
+    @apply border border-white/15 bg-white/[0.07] backdrop-blur-xl;
+  }
+
+  .showcase-card {
+    @apply relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-[0_16px_45px_-25px_rgba(89,15,15,0.35)] transition duration-300 hover:-translate-y-1.5 hover:border-brand-200 hover:shadow-[0_28px_60px_-25px_rgba(89,15,15,0.45)];
+  }
+
+  .showcase-eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-brand-200/70 bg-brand-50/90 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700;
+  }
+
+  .showcase-title {
+    @apply text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-[2.75rem];
+  }
+
+  .showcase-section {
+    @apply relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8;
+  }
+}
+
+/* Efek permukaan yang tidak bisa dibuat dengan utilitas biasa */
+.text-shimmer {
+  background: linear-gradient(100deg, #991b1b 10%, #f59e0b 32%, #dc2626 52%, #7f1d1d 78%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-x 8s ease infinite;
+}
+
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+}
+
+.stage-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 54px 54px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 35%, black 10%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 50% 35%, black 10%, transparent 72%);
+}
+
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.card-tilt:hover {
+  transform: perspective(1000px) rotateX(3deg) rotateY(-3deg) translateY(-6px);
 }
 
 @media (prefers-reduced-motion: reduce) {
