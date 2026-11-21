@@ -59,9 +59,11 @@ Supabase sudah aktif dan terhubung ke aplikasi lokal.
 | Schema | Sudah dijalankan (tabel, RLS, storage, data contoh) |
 | Akun admin pertama | Sudah dibuat dan role-nya sudah `admin` |
 | `.env.local` | Sudah diisi dengan Project URL + anon key |
-| Deploy Vercel | Mengikuti Langkah 5 di bawah |
+| GitHub | `https://github.com/AkhyarBasyir/portal-tapak-suci` |
+| Vercel | `https://portal-tapak-suci.vercel.app` |
+| Auto deploy | Aktif: setiap push ke `main` otomatis di-deploy |
 
-> Kredensial detail (URL, anon key, email/password admin, dan database password) tersimpan di `credentials.local.md` yang **tidak ikut di-push** ke repository. Segera ganti kata sandi admin setelah login pertama di **Supabase → Authentication → Users**.
+> URL produksi sudah diuji: beranda, berita, login admin, dan dashboard menampilkan data langsung dari Supabase. Kredensial detail (URL, anon key, email/password admin, dan database password) tersimpan di `credentials.local.md` yang **tidak ikut di-push** ke repository. Segera ganti kata sandi admin setelah login pertama di **Supabase → Authentication → Users**.
 
 Data contoh yang sudah masuk: 4 anggota, 2 kegiatan, 2 berita, 2 media, 2 catatan keuangan, dan 1 iuran.
 
