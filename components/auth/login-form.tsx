@@ -18,7 +18,7 @@ export default function LoginForm() {
   }
   const roleLabel = roleParam ? roleLabels[roleParam] : null
 
-  const [email, setEmail] = useState('')
+  const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -29,8 +29,22 @@ export default function LoginForm() {
     setError(null)
 
     const supabase = createClient()
+
+    // Username dan email keduanya diterima. Jika input bukan email,
+    // resolver database mencari email berdasarkan username.
+    const { data: resolvedEmail, error: resolveError } = await supabase.rpc(
+      'email_for_login',
+      { identifier: identifier.trim() },
+    )
+
+    if (resolveError || !resolvedEmail) {
+      setError('Username atau email tidak ditemukan.')
+      setLoading(false)
+      return
+    }
+
     const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
+      email: resolvedEmail,
       password,
     })
 
@@ -48,7 +62,7 @@ export default function LoginForm() {
     <form onSubmit={submit} className="card p-8">
       <p className="text-sm font-semibold uppercase tracking-wide text-brand-600">Selamat datang</p>
       <h1 className="mt-1 text-2xl font-bold text-slate-900">Masuk ke Akun</h1>
-      <p className="mt-2 text-sm text-slate-600">Gunakan email dan kata sandi yang terdaftar.</p>
+      <p className="mt-2 text-sm text-slate-600">Gunakan username atau email dan kata sandi yang terdaftar.</p>
 
       {roleLabel && (
         <div className="mt-4 rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-900">
@@ -65,14 +79,14 @@ export default function LoginForm() {
 
       <div className="mt-6 space-y-4">
         <div>
-          <label className="label" htmlFor="email">Email</label>
+          <label className="label" htmlFor="identifier">Username atau Email</label>
           <input
-            id="email"
-            type="email"
+            id="identifier"
+            type="text"
             className="input"
-            placeholder="nama@example.com"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            placeholder="akhyar atau nama@example.com"
+            value={identifier}
+            onChange={(event) => setIdentifier(event.target.value)}
             required
           />
         </div>

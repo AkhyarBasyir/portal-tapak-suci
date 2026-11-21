@@ -47,6 +47,9 @@ create table if not exists public.profiles (
   updated_at timestamptz not null default now()
 );
 
+-- Username opsional untuk login (selain email). Nullable agar user lama tetap valid.
+alter table public.profiles add column if not exists username text unique;
+
 create table if not exists public.anggota (
   id uuid primary key default gen_random_uuid(),
   nip text unique not null,
@@ -135,6 +138,21 @@ create table if not exists public.iuran (
 -- ----------------------------------------------------------------------------
 -- Helper functions
 -- ----------------------------------------------------------------------------
+-- Mengubah email atau username menjadi email untuk Supabase Auth.
+-- security definer diperlukan agar form login (anon) bisa mencari username.
+create or replace function public.email_for_login(identifier text)
+returns text
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select case
+    when identifier like '%@%' then identifier
+    else (select email from public.profiles where lower(username) = lower(identifier))
+  end;
+$$;
+
 create or replace function public.current_role()
 returns public.user_role
 language sql
@@ -242,6 +260,7 @@ end $$;
 grant usage on schema public to anon, authenticated;
 grant all on all tables in schema public to anon, authenticated;
 grant all on all sequences in schema public to anon, authenticated;
+grant execute on function public.email_for_login(text) to anon, authenticated;
 grant execute on function public.current_role() to anon, authenticated;
 grant execute on function public.is_admin() to anon, authenticated;
 grant execute on function public.is_pengurus() to anon, authenticated;

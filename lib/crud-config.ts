@@ -204,6 +204,7 @@ export const CRUD_CONFIGS: Record<string, CrudConfig> = {
     description: 'Atur peran pengguna: admin, pengurus, atau anggota.',
     fields: [
       { name: 'full_name', label: 'Nama Lengkap', type: 'text', required: true },
+      { name: 'username', label: 'Username (untuk login)', type: 'text' },
       { name: 'role', label: 'Peran', type: 'select', required: true, options: [
         { value: 'admin', label: 'Admin' },
         { value: 'pengurus', label: 'Pengurus' },
