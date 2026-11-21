@@ -16,7 +16,8 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 ## Fitur
 
 ### Halaman publik
-- **Beranda cinematic yang dinamis**: hero dengan foto & animasi, marquee, kartu "Dua Bidang, Satu Semangat", sorotan sanggar, jadwal latihan, prestasi, berita, dan pilihan login
+- **Beranda cinematic yang dinamis**: hero dengan foto pencak silat, gradasi Nusantara/Jawa/Wayang bermotif mega mendung, animasi, marquee, kartu "Dua Bidang, Satu Semangat", sorotan sanggar, jadwal latihan, prestasi, berita, dan pilihan login
+- Beranda dan halaman program publik hanya menampilkan **program Umum**; program khusus/intensif/pertandingan tidak pernah tampil ke publik
 - **Dua bidang utama**: Prestasi di Gelanggang dan Seni Pertunjukan Pentas, masing-masing punya halaman khusus
 - **Sanggar Seni Budaya Surya Manggala Integra** (`/sanggar`): sendratari, penampilan, tradisi pencak silat, sosiodrama, dan pembinaan akhlak berlandaskan Al-Qur'an dan Sunnah, lengkap dengan jadwal penampilan
 - **Prestasi** (`/prestasi`) dikelompokkan menjadi gelanggang dan seni pertunjukan
@@ -27,6 +28,7 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 - Profil anggota aktif
 - Galeri foto
 - Arsip dokumen dengan tombol unduh
+- **Kredit Foto** (`/kredit-foto`): atribusi seluruh foto pencak silat berlisensi terbuka yang dipakai portal
 
 ### Dashboard (setelah login)
 - **Halaman masuk yang elegan dan responsif**: pemilih peran interaktif, tampilkan/sembunyikan kata sandi, peringatan Caps Lock, serta opsi mengingat username (kata sandi tidak pernah disimpan)
@@ -38,6 +40,8 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 - CRUD **Dokumen & galeri** (upload file/foto)
 - CRUD **Keuangan & kas** (bukti transaksi di bucket privat)
 - CRUD **Iuran anggota**
+- **Raport Saya** (`/dashboard/raport-saya`): raport atlet dengan grafik radar dan garis, pengukuran fisik (tinggi, berat, lingkar tubuh, denyut nadi), performa (power, kecepatan, VO2 max, teknik, strategi, mental), prestasi, penilaian kepribadian 12 aspek, tombol **Simpan PDF** (print) dan **Unduh Raport** (HTML)
+- CRUD raport untuk pengurus: **Raport Atlet**, **Pengukuran Fisik**, **Performa Atlet**, **Prestasi Atlet**, dan **Kepribadian**
 - Kelola **Pengguna & hak akses** (khusus admin)
 
 ### Hak akses
@@ -53,6 +57,7 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 | Keuangan | Tambah/Ubah/Hapus | Tambah/Ubah | Lihat | Tidak bisa lihat |
 | Iuran | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Tidak bisa lihat |
 | Pengguna | Ubah peran | Lihat profil | Ubah profil sendiri | Tidak bisa lihat |
+| Raport atlet | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat raport sendiri yang Terbit/Arsip | Tidak bisa lihat |
 
 Aturan di atas tidak hanya ada di tampilan, tetapi juga diterapkan di **Row Level Security (RLS)** Supabase dan trigger database, sehingga data tetap aman walaupun ada permintaan langsung ke API.
 
@@ -74,7 +79,7 @@ Supabase sudah aktif dan terhubung ke aplikasi lokal.
 
 > URL produksi sudah diuji: beranda, berita, login admin, dan dashboard menampilkan data langsung dari Supabase. Kredensial detail (URL, anon key, email/password admin, dan database password) tersimpan di `credentials.local.md` yang **tidak ikut di-push** ke repository. Segera ganti kata sandi admin setelah login pertama di **Supabase → Authentication → Users**.
 
-Data contoh yang sudah masuk: 4 anggota, 2 kegiatan, 2 berita, 2 media, 2 catatan keuangan, dan 1 iuran.
+Data contoh yang sudah masuk: 4 anggota, 2 kegiatan, 2 berita, 2 media, 2 catatan keuangan, 1 iuran, dan 3 raport atlet lengkap dengan pengukuran, performa, prestasi, serta kepribadian (hasil migrasi `supabase/migration-raport-atlet.sql`).
 
 ---
 
@@ -90,6 +95,11 @@ Data contoh yang sudah masuk: 4 anggota, 2 kegiatan, 2 berita, 2 media, 2 catata
    - kebijakan RLS,
    - bucket `media` (publik) dan `bukti` (privat),
    - data contoh.
+5. Jalankan juga migrasi lanjutan berikut secara berurutan di SQL Editor yang sama:
+   - [`supabase/migration-sanggar.sql`](supabase/migration-sanggar.sql) — konten beranda, fokus sanggar, penampilan, prestasi;
+   - [`supabase/migration-raport-atlet.sql`](supabase/migration-raport-atlet.sql) — raport atlet, pengukuran fisik, performa, prestasi, kepribadian, dan RLS-nya.
+   
+   Keduanya idempoten, jadi aman dijalankan ulang.
 
 ## Langkah 2 — Buat akun admin pertama
 

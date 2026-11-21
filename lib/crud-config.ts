@@ -17,6 +17,18 @@ const JENIS_PENAMPILAN = ['Sendratari', 'Penampilan', 'Tradisi Pencak Silat', 'S
 const IKON_FOKUS = ['Drama', 'Sparkles', 'Swords', 'Users', 'BookOpen', 'Trophy', 'Heart', 'Sparkle']
   .map((value) => ({ value, label: value }))
 
+const STATUS_RAPORT = ['Draft', 'Terbit', 'Arsip'].map((value) => ({ value, label: value }))
+const JENJANG_ATLET = ['Pengenal', 'Penggalang', 'Pembina', 'Muda', 'Madya', 'Utama', 'Pendekar']
+  .map((value) => ({ value, label: value }))
+const ASPEK_PERFORMA_OPTIONS = [
+  'Power', 'Kecepatan', 'Daya Tahan (VO2 Max)', 'Teknik', 'Strategi', 'Mental',
+].map((value) => ({ value, label: value }))
+const ASPEK_KEPRIBADIAN_OPTIONS = [
+  'Disiplin', 'Tanggung Jawab', 'Kerja Sama', 'Sportivitas', 'Kepemimpinan',
+  'Kepercayaan Diri', 'Sabar', 'Rendah Hati', 'Komunikasi', 'Ketahanan Mental',
+  'Etika', 'Inisiatif',
+].map((value) => ({ value, label: value }))
+
 export const CRUD_CONFIGS: Record<string, CrudConfig> = {
   anggota: {
     key: 'anggota',
@@ -354,6 +366,147 @@ export const CRUD_CONFIGS: Record<string, CrudConfig> = {
     ],
     orderBy: 'tanggal',
     ascending: false,
+    minRole: 'pengurus',
+    deleteRole: 'pengurus',
+  },
+
+  raport_atlet: {
+    key: 'raport_atlet',
+    table: 'raport_atlet',
+    title: 'Raport Atlet',
+    singular: 'Raport',
+    description: 'Terbitkan raport atlet. Anggota hanya melihat raport dengan status Terbit atau Arsip.',
+    fields: [
+      { name: 'profil_id', label: 'Atlet (Akun)', type: 'relation', required: true, relation: { table: 'profiles', value: 'id', label: 'full_name' }, help: 'Pilih akun atlet yang akan menerima raport ini.' },
+      { name: 'anggota_id', label: 'Data Anggota', type: 'relation', relation: { table: 'anggota', value: 'id', label: 'nama' }, help: 'Opsional, tautkan ke data anggota bila tersedia.' },
+      { name: 'periode', label: 'Periode', type: 'text', required: true, placeholder: 'Contoh: Triwulan I 2026' },
+      { name: 'tanggal', label: 'Tanggal Raport', type: 'date', required: true },
+      { name: 'jenjang', label: 'Jenjang', type: 'select', options: JENJANG_ATLET },
+      { name: 'kelas', label: 'Kelas / Kategori', type: 'text', placeholder: 'Contoh: B 55-60 kg' },
+      { name: 'cabang', label: 'Cabang', type: 'text' },
+      { name: 'pelatih', label: 'Nama Pelatih', type: 'text' },
+      { name: 'skor_keseluruhan', label: 'Skor Keseluruhan (0-100)', type: 'number', required: true },
+      { name: 'kehadiran_persen', label: 'Kehadiran (%)', type: 'number' },
+      { name: 'peringkat', label: 'Peringkat', type: 'text', placeholder: 'Contoh: Juara 1' },
+      { name: 'status', label: 'Status', type: 'select', required: true, options: STATUS_RAPORT },
+      { name: 'catatan', label: 'Catatan Pelatih', type: 'textarea' },
+      { name: 'rekomendasi', label: 'Rekomendasi Latihan', type: 'textarea' },
+    ],
+    columns: [
+      { name: 'periode', label: 'Periode' },
+      { name: 'profil_id', label: 'Atlet', type: 'relation' },
+      { name: 'tanggal', label: 'Tanggal', type: 'date' },
+      { name: 'skor_keseluruhan', label: 'Skor' },
+      { name: 'status', label: 'Status', type: 'badge' },
+    ],
+    orderBy: 'tanggal',
+    ascending: false,
+    minRole: 'pengurus',
+    deleteRole: 'admin',
+  },
+
+  raport_pengukuran: {
+    key: 'raport_pengukuran',
+    table: 'raport_pengukuran',
+    title: 'Pengukuran Fisik Atlet',
+    singular: 'Pengukuran',
+    description: 'Catat tinggi, berat, lingkar tubuh, dan denyut nadi istirahat per raport.',
+    fields: [
+      { name: 'raport_id', label: 'Raport', type: 'relation', required: true, relation: { table: 'raport_atlet', value: 'id', label: 'periode' } },
+      { name: 'tinggi_badan_cm', label: 'Tinggi Badan (cm)', type: 'number' },
+      { name: 'berat_badan_kg', label: 'Berat Badan (kg)', type: 'number' },
+      { name: 'lingkar_dada_cm', label: 'Lingkar Dada (cm)', type: 'number' },
+      { name: 'lingkar_pinggang_cm', label: 'Lingkar Pinggang (cm)', type: 'number' },
+      { name: 'lingkar_paha_cm', label: 'Lingkar Paha (cm)', type: 'number' },
+      { name: 'denyut_nadi_istirahat', label: 'Denyut Nadi Istirahat (/menit)', type: 'number' },
+      { name: 'catatan', label: 'Catatan', type: 'textarea' },
+    ],
+    columns: [
+      { name: 'raport_id', label: 'Raport', type: 'relation' },
+      { name: 'tinggi_badan_cm', label: 'Tinggi' },
+      { name: 'berat_badan_kg', label: 'Berat' },
+      { name: 'denyut_nadi_istirahat', label: 'Nadi' },
+    ],
+    minRole: 'pengurus',
+    deleteRole: 'pengurus',
+  },
+
+  raport_performa: {
+    key: 'raport_performa',
+    table: 'raport_performa',
+    title: 'Penilaian Performa',
+    singular: 'Penilaian',
+    description: 'Nilai power, kecepatan, VO2 max, teknik, strategi, dan mental atlet.',
+    fields: [
+      { name: 'raport_id', label: 'Raport', type: 'relation', required: true, relation: { table: 'raport_atlet', value: 'id', label: 'periode' } },
+      { name: 'aspek', label: 'Aspek', type: 'select', required: true, options: ASPEK_PERFORMA_OPTIONS },
+      { name: 'nilai', label: 'Nilai (0-100)', type: 'number', required: true },
+      { name: 'satuan', label: 'Satuan', type: 'text', placeholder: 'skor / ml/kg/menit' },
+      { name: 'urutan', label: 'Urutan', type: 'number' },
+      { name: 'keterangan', label: 'Keterangan', type: 'textarea' },
+    ],
+    columns: [
+      { name: 'raport_id', label: 'Raport', type: 'relation' },
+      { name: 'aspek', label: 'Aspek', type: 'badge' },
+      { name: 'nilai', label: 'Nilai' },
+      { name: 'satuan', label: 'Satuan' },
+    ],
+    orderBy: 'urutan',
+    ascending: true,
+    minRole: 'pengurus',
+    deleteRole: 'pengurus',
+  },
+
+  raport_prestasi: {
+    key: 'raport_prestasi',
+    table: 'raport_prestasi',
+    title: 'Prestasi Atlet',
+    singular: 'Prestasi',
+    description: 'Catat prestasi gelanggang yang masuk ke dalam raport atlet.',
+    fields: [
+      { name: 'raport_id', label: 'Raport', type: 'relation', required: true, relation: { table: 'raport_atlet', value: 'id', label: 'periode' } },
+      { name: 'judul', label: 'Nama Kejuaraan', type: 'text', required: true },
+      { name: 'tingkat', label: 'Tingkat', type: 'select', options: TINGKAT_PRESTASI },
+      { name: 'peringkat', label: 'Peringkat', type: 'text' },
+      { name: 'tanggal', label: 'Tanggal', type: 'date' },
+      { name: 'penyelenggara', label: 'Penyelenggara', type: 'text' },
+      { name: 'urutan', label: 'Urutan', type: 'number' },
+      { name: 'keterangan', label: 'Keterangan', type: 'textarea' },
+    ],
+    columns: [
+      { name: 'raport_id', label: 'Raport', type: 'relation' },
+      { name: 'judul', label: 'Prestasi' },
+      { name: 'tingkat', label: 'Tingkat', type: 'badge' },
+      { name: 'peringkat', label: 'Peringkat' },
+      { name: 'tanggal', label: 'Tanggal', type: 'date' },
+    ],
+    orderBy: 'urutan',
+    ascending: true,
+    minRole: 'pengurus',
+    deleteRole: 'pengurus',
+  },
+
+  raport_kepribadian: {
+    key: 'raport_kepribadian',
+    table: 'raport_kepribadian',
+    title: 'Penilaian Kepribadian',
+    singular: 'Kepribadian',
+    description: 'Nilai disiplin, tanggung jawab, sportivitas, kepemimpinan, dan aspek karakter lainnya.',
+    fields: [
+      { name: 'raport_id', label: 'Raport', type: 'relation', required: true, relation: { table: 'raport_atlet', value: 'id', label: 'periode' } },
+      { name: 'aspek', label: 'Aspek', type: 'select', required: true, options: ASPEK_KEPRIBADIAN_OPTIONS },
+      { name: 'nilai', label: 'Nilai (0-100)', type: 'number', required: true },
+      { name: 'urutan', label: 'Urutan', type: 'number' },
+      { name: 'keterangan', label: 'Keterangan', type: 'textarea' },
+    ],
+    columns: [
+      { name: 'raport_id', label: 'Raport', type: 'relation' },
+      { name: 'aspek', label: 'Aspek', type: 'badge' },
+      { name: 'nilai', label: 'Nilai' },
+      { name: 'keterangan', label: 'Keterangan' },
+    ],
+    orderBy: 'urutan',
+    ascending: true,
     minRole: 'pengurus',
     deleteRole: 'pengurus',
   },

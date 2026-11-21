@@ -189,7 +189,7 @@ export default async function HomePage() {
       getRecentBerita(3),
       getUpcomingKegiatan(3),
       getDashboardStats(),
-      getProgramLatihanUmum(),
+      getProgramLatihanUmum(true),
       getSanggarFokus(),
       getSanggarPenampilan(4),
       getPrestasi(6),
@@ -219,6 +219,7 @@ export default async function HomePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-br from-brand-900/95 via-[#3d0b0b]/92 to-[#140808]/97" />
           <div className="stage-grid absolute inset-0 opacity-70" />
+          <div className="nusantara-motif absolute inset-0 opacity-70" />
           <div className="noise-overlay" />
           <div className="absolute -left-32 top-10 h-96 w-96 animate-pulse-glow rounded-full bg-brand-500/25 blur-3xl" />
           <div className="absolute -right-20 bottom-0 h-96 w-96 animate-aura rounded-full bg-amber-500/10 blur-3xl" />

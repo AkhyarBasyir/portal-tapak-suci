@@ -1,11 +1,17 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import {
+  Activity,
   CalendarDays,
   Dumbbell,
+  FileBarChart2,
+  FileText,
+  Gauge,
+  HeartHandshake,
   Images,
   LayoutDashboard,
   LayoutTemplate,
+  Medal,
   Newspaper,
   Palette,
   Receipt,
@@ -31,6 +37,12 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: '/dashboard', label: 'Ringkasan', icon: LayoutDashboard },
+  { href: '/dashboard/raport-saya', label: 'Raport Saya', icon: FileText },
+  { href: '/dashboard/raport_atlet', label: 'Raport Atlet', icon: FileBarChart2, minRole: 'pengurus' },
+  { href: '/dashboard/raport_pengukuran', label: 'Pengukuran Fisik', icon: Activity, minRole: 'pengurus' },
+  { href: '/dashboard/raport_performa', label: 'Performa Atlet', icon: Gauge, minRole: 'pengurus' },
+  { href: '/dashboard/raport_prestasi', label: 'Prestasi Atlet', icon: Medal, minRole: 'pengurus' },
+  { href: '/dashboard/raport_kepribadian', label: 'Kepribadian', icon: HeartHandshake, minRole: 'pengurus' },
   { href: '/dashboard/anggota', label: 'Anggota', icon: Users, minRole: 'pengurus' },
   { href: '/dashboard/kegiatan', label: 'Kegiatan', icon: CalendarDays, minRole: 'pengurus' },
   { href: '/dashboard/program-latihan', label: 'Program Latihan', icon: Dumbbell, minRole: 'pengurus' },

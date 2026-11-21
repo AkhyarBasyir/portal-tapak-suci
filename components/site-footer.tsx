@@ -14,6 +14,7 @@ const lainnya = [
   { href: '/anggota', label: 'Anggota' },
   { href: '/galeri', label: 'Galeri' },
   { href: '/dokumen', label: 'Dokumen' },
+  { href: '/kredit-foto', label: 'Kredit Foto' },
 ]
 
 export default function SiteFooter() {

@@ -1,4 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
+import { JENIS_UMUM_PUBLIK } from '@/lib/program-latihan'
+import type { RaportLengkap } from '@/lib/raport'
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 
@@ -111,16 +113,20 @@ export async function getMediaByType(tipe: 'galeri' | 'dokumen') {
   )
 }
 
-export async function getProgramLatihanUmum() {
+/**
+ * @param hanyaUmum bila true, hanya jenis latihan umum yang ditampilkan.
+ * Dipakai halaman publik/beranda agar program khusus tidak pernah tampil.
+ */
+export async function getProgramLatihanUmum(hanyaUmum = false) {
   const supabase = await getClient()
   if (!supabase) return []
-  return safeFetch<any>(
-    supabase
-      .from('program_latihan')
-      .select('*')
-      .eq('status', 'Aktif')
-      .order('tanggal_mulai', { ascending: true }) as any,
-  )
+  let query = supabase
+    .from('program_latihan')
+    .select('*')
+    .eq('status', 'Aktif')
+    .order('tanggal_mulai', { ascending: true }) as any
+  if (hanyaUmum) query = query.in('jenis', JENIS_UMUM_PUBLIK)
+  return safeFetch<any>(query)
 }
 
 // RLS pada program_khusus otomatis membatasi hasil: admin/pengurus melihat semua,
@@ -209,6 +215,66 @@ export async function getPrestasi(limit = 12) {
   )
 }
 
+async function raportLengkap(
+  supabase: SupabaseServerClient,
+  headers: any[],
+): Promise<RaportLengkap[]> {
+  if (!headers.length) return []
+  const ids = headers.map((item) => item.id)
+  const [pengukuran, performa, prestasi, kepribadian] = await Promise.all([
+    safeFetch<any>(supabase.from('raport_pengukuran').select('*').in('raport_id', ids) as any),
+    safeFetch<any>(supabase.from('raport_performa').select('*').in('raport_id', ids) as any),
+    safeFetch<any>(supabase.from('raport_prestasi').select('*').in('raport_id', ids) as any),
+    safeFetch<any>(supabase.from('raport_kepribadian').select('*').in('raport_id', ids) as any),
+  ])
+
+  return headers.map((header) => ({
+    ...header,
+    pengukuran: pengukuran.filter((item) => item.raport_id === header.id),
+    performa: performa
+      .filter((item) => item.raport_id === header.id)
+      .sort((a, b) => Number(a.urutan ?? 0) - Number(b.urutan ?? 0)),
+    prestasi: prestasi
+      .filter((item) => item.raport_id === header.id)
+      .sort((a, b) => Number(a.urutan ?? 0) - Number(b.urutan ?? 0)),
+    kepribadian: kepribadian
+      .filter((item) => item.raport_id === header.id)
+      .sort((a, b) => Number(a.urutan ?? 0) - Number(b.urutan ?? 0)),
+  })) as RaportLengkap[]
+}
+
+// RLS membatasi hasil: anggota hanya melihat raportnya sendiri yang Terbit/Arsip.
+export async function getRaportSaya(profilId: string): Promise<RaportLengkap[]> {
+  const supabase = await getClient()
+  if (!supabase) return []
+  const headers = await safeFetch<any>(
+    supabase
+      .from('raport_atlet')
+      .select('*')
+      .eq('profil_id', profilId)
+      .neq('status', 'Draft')
+      .order('tanggal', { ascending: false }) as any,
+  )
+  return raportLengkap(supabase, headers)
+}
+
+export async function getRaportDetail(id: string): Promise<RaportLengkap | null> {
+  const supabase = await getClient()
+  if (!supabase) return null
+  try {
+    const { data } = await supabase
+      .from('raport_atlet')
+      .select('*')
+      .eq('id', id)
+      .single()
+    if (!data) return null
+    const [detail] = await raportLengkap(supabase, [data])
+    return detail ?? null
+  } catch {
+    return null
+  }
+}
+
 export async function getDashboardStats() {
   const supabase = await getClient()
   if (!supabase) {
@@ -223,6 +289,7 @@ export async function getDashboardStats() {
       prestasi: 0,
       sanggar_fokus: 0,
       sanggar_penampilan: 0,
+      raport_atlet: 0,
     }
   }
 
@@ -237,6 +304,7 @@ export async function getDashboardStats() {
     'prestasi',
     'sanggar_fokus',
     'sanggar_penampilan',
+    'raport_atlet',
   ]
   const counts = await Promise.all(
     tables.map((table) =>

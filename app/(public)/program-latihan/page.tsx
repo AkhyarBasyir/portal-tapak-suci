@@ -16,7 +16,7 @@ export const metadata = {
 
 export default async function ProgramLatihanPage() {
   const [programUmum, programKhusus, session] = await Promise.all([
-    getProgramLatihanUmum(),
+    getProgramLatihanUmum(true),
     getProgramKhusus(),
     getSessionProfile(),
   ])

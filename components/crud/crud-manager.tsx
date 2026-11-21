@@ -131,6 +131,24 @@ export default function CrudManager({
       values.tanggal = new Date().toISOString().slice(0, 10)
       values.urutan = 0
     }
+    if (config.key === 'raport_atlet') {
+      values.status = 'Terbit'
+      values.tanggal = new Date().toISOString().slice(0, 10)
+      values.skor_keseluruhan = 0
+      values.kehadiran_persen = 0
+    }
+    if (config.key === 'raport_pengukuran') {
+      values.catatan = ''
+    }
+    if (
+      config.key === 'raport_performa' ||
+      config.key === 'raport_prestasi' ||
+      config.key === 'raport_kepribadian'
+    ) {
+      values.nilai = 0
+      values.urutan = 0
+      values.tanggal = new Date().toISOString().slice(0, 10)
+    }
     return values
   }
 
@@ -280,7 +298,7 @@ export default function CrudManager({
               setForm((prev) => ({ ...prev, [field.name]: event.target.value }))
             }
           />
-        ) : field.type === 'select' ? (
+        ) : field.type === 'select' || field.type === 'relation' ? (
           <select
             id={`field-${field.name}`}
             className="input"

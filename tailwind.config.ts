@@ -62,6 +62,15 @@ const config: Config = {
           '20%, 60%': { transform: 'translateX(-5px)' },
           '40%, 80%': { transform: 'translateX(5px)' },
         },
+        'radar-in': {
+          '0%': { opacity: '0', transform: 'scale(0.72)' },
+          '70%': { opacity: '1', transform: 'scale(1.04)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        'draw-path': {
+          '0%': { strokeDasharray: '0 1400' },
+          '100%': { strokeDasharray: '1400 0' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both',
@@ -74,6 +83,8 @@ const config: Config = {
         'pulse-glow': 'pulse-glow 5s ease-in-out infinite',
         'stage-in': 'stage-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both',
         'draw-line': 'draw-line 1.2s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'radar-in': 'radar-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'draw-path': 'draw-path 1.4s cubic-bezier(0.22, 1, 0.36, 1) both',
       },
     },
   },

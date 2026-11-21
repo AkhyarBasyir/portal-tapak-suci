@@ -593,11 +593,11 @@ values
 on conflict (slug) do nothing;
 
 insert into public.media (judul, tipe, kategori, file_url, keterangan)
-select 'Foto Latihan Bersama', 'galeri', 'Latihan', 'https://placehold.co/800x600/dc2626/ffffff?text=Tapak+Suci', 'Dokumentasi latihan bersama anggota.'
+select 'Foto Latihan Bersama', 'galeri', 'Latihan', '/prestasi-gelanggang.jpg', 'Dokumentasi latihan bersama anggota.'
 where not exists (select 1 from public.media where judul = 'Foto Latihan Bersama');
 
 insert into public.media (judul, tipe, kategori, file_url, keterangan)
-select 'AD/ART Tapak Suci', 'dokumen', 'Tata Kelola', 'https://placehold.co/600x800/ffffff/dc2626?text=AD-ART', 'Anggaran Dasar dan Anggaran Rumah Tangga (contoh).'
+select 'AD/ART Tapak Suci', 'dokumen', 'Tata Kelola', '/login-silat.jpg', 'Anggaran Dasar dan Anggaran Rumah Tangga (contoh).'
 where not exists (select 1 from public.media where judul = 'AD/ART Tapak Suci');
 
 insert into public.keuangan (jenis, kategori, keterangan, jumlah, tanggal)

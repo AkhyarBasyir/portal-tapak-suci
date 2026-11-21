@@ -19,6 +19,7 @@ const navLainnya = [
   { href: '/anggota', label: 'Anggota' },
   { href: '/galeri', label: 'Galeri' },
   { href: '/dokumen', label: 'Dokumen' },
+  { href: '/kredit-foto', label: 'Kredit Foto' },
 ]
 
 const semua = [...nav, ...navLainnya]

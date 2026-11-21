@@ -34,6 +34,18 @@ export const JENIS_UMUM_OPTIONS = [
   'Latihan Spesialisasi',
 ]
 
+/**
+ * Jenis yang boleh tampil di area publik/beranda. Program dengan pola
+ * khusus, intensif, pertandingan, kamp, maupun spesialisasi sengaja
+ * dikecualikan karena ditujukan hanya untuk anggota dan pengurus.
+ */
+export const JENIS_UMUM_PUBLIK = [
+  'Latihan Reguler',
+  'Latihan Dasar',
+  'Latihan Lanjutan',
+  'Pembinaan',
+]
+
 export const JENIS_KHUSUS_OPTIONS = [
   'Latihan Khusus',
   'Latihan Intensif',
