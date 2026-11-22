@@ -99,9 +99,10 @@ Data contoh yang sudah masuk: 4 anggota, 2 kegiatan, 2 berita, 2 media, 2 catata
    - data contoh.
 5. Jalankan juga migrasi lanjutan berikut secara berurutan di SQL Editor yang sama:
    - [`supabase/migration-sanggar.sql`](supabase/migration-sanggar.sql) — konten beranda, fokus sanggar, penampilan, prestasi;
-   - [`supabase/migration-raport-atlet.sql`](supabase/migration-raport-atlet.sql) — raport atlet, pengukuran fisik, performa, prestasi, kepribadian, dan RLS-nya.
-   
-   Keduanya idempoten, jadi aman dijalankan ulang.
+   - [`supabase/migration-raport-atlet.sql`](supabase/migration-raport-atlet.sql) — raport atlet, pengukuran fisik, performa, prestasi, kepribadian, dan RLS-nya;
+   - [`supabase/migration-service-role-grants.sql`](supabase/migration-service-role-grants.sql) — grant akses `service_role` supaya fitur **Tambah Anggota** dan **Ganti Password** bisa menulis ke tabel.
+
+   Ketiganya idempoten, jadi aman dijalankan ulang.
 
 ## Langkah 2 — Buat akun admin pertama
 
@@ -188,7 +189,10 @@ lib/
   supabase/            # Client browser, server, dan middleware
 proxy.ts               # Proteksi route /dashboard dan redirect login
 supabase/
-  schema.sql           # Schema lengkap + RLS + storage + data contoh
+  schema.sql                       # Schema lengkap + RLS + storage + data contoh
+  migration-sanggar.sql            # Konten beranda & sanggar
+  migration-raport-atlet.sql       # Raport atlet
+  migration-service-role-grants.sql# Grant service_role untuk fitur admin
 ```
 
 > Untuk pemeriksaan tipe tanpa build: `npm run typecheck`.
