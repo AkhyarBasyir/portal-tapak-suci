@@ -219,36 +219,6 @@ export const CRUD_CONFIGS: Record<string, CrudConfig> = {
     deleteRole: 'pengurus',
   },
 
-  pengguna: {
-    key: 'pengguna',
-    table: 'profiles',
-    title: 'Pengguna & Hak Akses',
-    singular: 'Pengguna',
-    description: 'Atur peran pengguna: admin, pengurus, atau anggota.',
-    fields: [
-      { name: 'full_name', label: 'Nama Lengkap', type: 'text', required: true },
-      { name: 'username', label: 'Username (untuk login)', type: 'text' },
-      { name: 'role', label: 'Peran', type: 'select', required: true, options: [
-        { value: 'admin', label: 'Admin' },
-        { value: 'pengurus', label: 'Pengurus' },
-        { value: 'anggota', label: 'Anggota' },
-      ] },
-      { name: 'jabatan', label: 'Jabatan', type: 'text' },
-      { name: 'telepon', label: 'Telepon', type: 'text' },
-      { name: 'avatar_url', label: 'Avatar', type: 'image', bucket: 'media' },
-    ],
-    columns: [
-      { name: 'full_name', label: 'Nama' },
-      { name: 'email', label: 'Email' },
-      { name: 'role', label: 'Peran', type: 'badge' },
-      { name: 'jabatan', label: 'Jabatan' },
-    ],
-    minRole: 'admin',
-    deleteRole: 'admin',
-    disableCreate: true,
-    hideDelete: true,
-  },
-
   beranda_konten: {
     key: 'beranda_konten',
     table: 'beranda_konten',

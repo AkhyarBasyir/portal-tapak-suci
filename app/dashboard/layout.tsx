@@ -19,7 +19,6 @@ import {
   Shield,
   Ticket,
   Trophy,
-  UserPlus,
   Users,
   Wallet,
   type LucideIcon,
@@ -35,12 +34,12 @@ interface NavItem {
   label: string
   icon: LucideIcon
   minRole?: 'admin' | 'pengurus'
+  roles?: Role[]
 }
 
 const navItems: NavItem[] = [
   { href: '/dashboard', label: 'Ringkasan', icon: LayoutDashboard },
-  { href: '/dashboard/tambah-anggota', label: 'Tambah Anggota', icon: UserPlus, minRole: 'admin' },
-  { href: '/dashboard/ganti-password', label: 'Ganti Password', icon: KeyRound },
+  { href: '/dashboard/ganti-password', label: 'Ganti Password', icon: KeyRound, roles: ['anggota', 'pengurus'] },
   { href: '/dashboard/raport-saya', label: 'Raport Saya', icon: FileText },
   { href: '/dashboard/raport_atlet', label: 'Raport Atlet', icon: FileBarChart2, minRole: 'pengurus' },
   { href: '/dashboard/raport_pengukuran', label: 'Pengukuran Fisik', icon: Activity, minRole: 'pengurus' },
@@ -63,6 +62,7 @@ const navItems: NavItem[] = [
 
 function visibleItems(role: Role) {
   return navItems.filter((item) => {
+    if (item.roles && !item.roles.includes(role)) return false
     if (!item.minRole) return true
     if (item.minRole === 'admin') return role === 'admin'
     return role === 'admin' || role === 'pengurus'

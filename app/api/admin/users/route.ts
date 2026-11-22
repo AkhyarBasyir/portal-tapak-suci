@@ -22,7 +22,9 @@ export async function POST(request: Request) {
   const email = String(body.email ?? '').trim().toLowerCase()
   const password = String(body.password ?? '')
   const nama = String(body.nama ?? '').trim()
+  const username = String(body.username ?? '').trim().toLowerCase()
   const role = String(body.role ?? 'anggota')
+  const buatAnggota = body.buat_anggota !== false
   const nip = String(body.nip ?? '').trim() || `TS-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`
   const jenjang = String(body.jenjang ?? '').trim()
   const jabatan = String(body.jabatan ?? '').trim()
@@ -63,6 +65,7 @@ export async function POST(request: Request) {
       id: userId,
       email,
       full_name: nama,
+      username: username || null,
       role,
       jabatan: jabatan || null,
       telepon: telepon || null,
@@ -71,22 +74,26 @@ export async function POST(request: Request) {
       return Response.json({ error: `Profil gagal disimpan: ${profileError.message}` }, { status: 500 })
     }
 
-    const { error: anggotaError } = await admin.from('anggota').insert({
-      nip,
-      nama,
-      jenjang: jenjang || 'Pengenal',
-      jabatan: jabatan || 'Anggota',
-      cabang: cabang || null,
-      telepon: telepon || null,
-      email,
-      status: 'Aktif',
-      tanggal_masuk: new Date().toISOString().slice(0, 10),
-    })
-    if (anggotaError) {
-      return Response.json({ error: `Data anggota gagal disimpan: ${anggotaError.message}` }, { status: 500 })
+    let anggotaNip: string | null = null
+    if (buatAnggota) {
+      const { error: anggotaError } = await admin.from('anggota').insert({
+        nip,
+        nama,
+        jenjang: jenjang || 'Pengenal',
+        jabatan: jabatan || 'Anggota',
+        cabang: cabang || null,
+        telepon: telepon || null,
+        email,
+        status: 'Aktif',
+        tanggal_masuk: new Date().toISOString().slice(0, 10),
+      })
+      if (anggotaError) {
+        return Response.json({ error: `Data anggota gagal disimpan: ${anggotaError.message}` }, { status: 500 })
+      }
+      anggotaNip = nip
     }
 
-    return Response.json({ ok: true, id: userId, nip }, { status: 201 })
+    return Response.json({ ok: true, id: userId, nip: anggotaNip }, { status: 201 })
   } catch (error) {
     return Response.json(
       { error: error instanceof Error ? error.message : 'Gagal menambah akun.' },

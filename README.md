@@ -40,11 +40,11 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 - CRUD **Dokumen & galeri** (upload file/foto)
 - CRUD **Keuangan & kas** (bukti transaksi di bucket privat)
 - CRUD **Iuran anggota**
-- **Tambah Anggota** (khusus admin): membuat akun login, profil, dan data anggota sekaligus
-- **Ganti Password**: semua peran dapat mengubah password sendiri; admin juga dapat mengganti password anggota/admin lain
+- **Pengguna** (khusus admin): tambah & ubah akun (admin/pengurus/anggota), atur peran, dan ganti password pengguna lain—semuanya dalam satu menu
+- **Ganti Password**: anggota dan pengurus dapat mengubah password sendiri dari menu tersendiri; admin melakukannya lewat menu **Pengguna**
 - **Raport Saya** (`/dashboard/raport-saya`): raport atlet dengan grafik radar dan garis, pengukuran fisik (tinggi, berat, lingkar tubuh, denyut nadi), performa (power, kecepatan, VO2 max, teknik, strategi, mental), prestasi, penilaian kepribadian 12 aspek, tombol **Simpan PDF** (print) dan **Unduh Raport** (HTML)
 - CRUD raport untuk pengurus: **Raport Atlet**, **Pengukuran Fisik**, **Performa Atlet**, **Prestasi Atlet**, dan **Kepribadian**
-- Kelola **Pengguna & hak akses** (khusus admin)
+- Kelola **Pengguna & hak akses** (khusus admin), termasuk pembuatan akun baru dengan peran admin/pengurus/anggota dan penggantian password
 
 ### Hak akses
 
@@ -58,7 +58,7 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 | Dokumen & galeri | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat |
 | Keuangan | Tambah/Ubah/Hapus | Tambah/Ubah | Lihat | Tidak bisa lihat |
 | Iuran | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Tidak bisa lihat |
-| Pengguna | Ubah peran | Lihat profil | Ubah profil sendiri | Tidak bisa lihat |
+| Pengguna | Tambah/Ubah akun & ganti password | Lihat profil | Ubah profil sendiri | Tidak bisa lihat |
 | Raport atlet | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat raport sendiri yang Terbit/Arsip | Tidak bisa lihat |
 
 Aturan di atas tidak hanya ada di tampilan, tetapi juga diterapkan di **Row Level Security (RLS)** Supabase dan trigger database, sehingga data tetap aman walaupun ada permintaan langsung ke API.
@@ -100,9 +100,10 @@ Data contoh yang sudah masuk: 4 anggota, 2 kegiatan, 2 berita, 2 media, 2 catata
 5. Jalankan juga migrasi lanjutan berikut secara berurutan di SQL Editor yang sama:
    - [`supabase/migration-sanggar.sql`](supabase/migration-sanggar.sql) — konten beranda, fokus sanggar, penampilan, prestasi;
    - [`supabase/migration-raport-atlet.sql`](supabase/migration-raport-atlet.sql) — raport atlet, pengukuran fisik, performa, prestasi, kepribadian, dan RLS-nya;
-   - [`supabase/migration-service-role-grants.sql`](supabase/migration-service-role-grants.sql) — grant akses `service_role` supaya fitur **Tambah Anggota** dan **Ganti Password** bisa menulis ke tabel.
+   - [`supabase/migration-service-role-grants.sql`](supabase/migration-service-role-grants.sql) — grant akses `service_role` supaya menu **Pengguna** bisa menambah/ubah akun dan password;
+   - [`supabase/migration-service-role-profile-role.sql`](supabase/migration-service-role-profile-role.sql) — sinkronisasi trigger peran agar perubahan role lewat Admin API diizinkan.
 
-   Ketiganya idempoten, jadi aman dijalankan ulang.
+   Keempatnya idempoten, jadi aman dijalankan ulang.
 
 ## Langkah 2 — Buat akun admin pertama
 
@@ -124,7 +125,7 @@ set role = 'pengurus'
 where email = 'email-pengurus@example.com';
 ```
 
-> Catatan: Halaman `/register` otomatis membuat akun dengan peran **anggota**. Admin juga bisa membuat akun lengkap lewat **Dashboard → Tambah Anggota**. Peran bisa diangkat menjadi pengurus/admin melalui menu **Dashboard → Pengguna** atau SQL di atas.
+> Catatan: Halaman `/register` otomatis membuat akun dengan peran **anggota**. Admin juga bisa membuat akun lengkap sekaligus mengatur perannya lewat **Dashboard → Pengguna → Tambah Pengguna**.
 
 ## Langkah 3 — Isi environment variable
 
@@ -142,7 +143,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...
 ```
 
-`SUPABASE_SERVICE_ROLE_KEY` dipakai hanya di server untuk fitur admin **Tambah Anggota** dan **Ganti Password pengguna**. Jangan pernah diberi awalan `NEXT_PUBLIC_` karena kunci ini tidak boleh sampai ke browser.
+`SUPABASE_SERVICE_ROLE_KEY` dipakai hanya di server oleh menu admin **Pengguna** untuk membuat/ubah akun dan mengganti password. Jangan pernah diberi awalan `NEXT_PUBLIC_` karena kunci ini tidak boleh sampai ke browser.
 
 ## Langkah 4 — Jalankan di komputer (hanya untuk development)
 
@@ -192,7 +193,8 @@ supabase/
   schema.sql                       # Schema lengkap + RLS + storage + data contoh
   migration-sanggar.sql            # Konten beranda & sanggar
   migration-raport-atlet.sql       # Raport atlet
-  migration-service-role-grants.sql# Grant service_role untuk fitur admin
+  migration-service-role-grants.sql   # Grant service_role untuk fitur admin
+  migration-service-role-profile-role.sql # Trigger peran untuk Admin API
 ```
 
 > Untuk pemeriksaan tipe tanpa build: `npm run typecheck`.
