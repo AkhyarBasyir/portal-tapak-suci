@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { SITE_URL } from '@/lib/constants'
+
 const DESKRIPSI =
   'Portal resmi Tapak Suci Putera Muhammadiyah dan Sanggar Surya Manggala Integra: prestasi di gelanggang, seni pertunjukan pentas, jadwal latihan, dan berita organisasi.'
 
@@ -11,6 +12,9 @@ export const metadata: Metadata = {
     template: '%s | Tapak Suci',
   },
   description: DESKRIPSI,
+  verification: {
+    google: 'xNz6hLBNbWhtY6jbyFia4GAq-HRHseCI_nIk31xkM94',
+  },
   openGraph: {
     type: 'website',
     locale: 'id_ID',
