@@ -112,7 +112,7 @@ export default async function SanggarPage() {
         </div>
         <div className="container-page relative grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="animate-fade-up">
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-200">
+            <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-amber-200">
               <Sparkles size={13} /> {subtitle}
             </span>
             <h1 className="mt-6 text-4xl font-extrabold leading-tight sm:text-6xl">
@@ -169,7 +169,7 @@ export default async function SanggarPage() {
                 key={String(item.id ?? item.judul ?? index)}
                 className="showcase-card group relative p-6"
               >
-                <span className="absolute right-5 top-4 text-4xl font-black text-slate-100 transition group-hover:text-brand-50">
+                <span aria-hidden="true" className="absolute right-5 top-4 text-4xl font-black text-slate-500 transition group-hover:text-brand-600">
                   0{index + 1}
                 </span>
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-900 text-white shadow-lg transition group-hover:rotate-6">
@@ -229,12 +229,12 @@ export default async function SanggarPage() {
                   </div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <span className="absolute bottom-4 left-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold text-brand-700">
+                <span className="absolute bottom-4 left-4 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-brand-700">
                   {item.jenis}
                 </span>
               </div>
               <div className="p-6">
-                <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold text-brand-700">
+                <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-brand-700">
                   <span className="inline-flex items-center gap-1.5">
                     <CalendarDays size={14} /> {formatDate(item.tanggal_mulai)}
                     {item.tanggal_selesai ? ` – ${formatDate(item.tanggal_selesai)}` : ''}
@@ -257,7 +257,7 @@ export default async function SanggarPage() {
                     <span className="inline-flex items-center gap-1.5"><Users size={14} /> {item.target}</span>
                   )}
                 </div>
-                <span className="mt-3 block text-[10px] font-bold uppercase tracking-widest text-slate-300">
+                <span className="mt-3 block text-xs font-bold uppercase tracking-widest text-slate-600">
                   #{String(index + 1).padStart(2, '0')}
                 </span>
               </div>

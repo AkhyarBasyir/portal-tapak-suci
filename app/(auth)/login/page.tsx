@@ -16,12 +16,7 @@ export default function LoginPage() {
           <div className="h-3 w-32 rounded-full bg-brand-100" />
           <div className="mt-5 h-8 w-3/4 rounded-lg bg-slate-200" />
           <div className="mt-3 h-4 w-2/3 rounded-lg bg-slate-100" />
-          <div className="mt-8 grid grid-cols-3 gap-2">
-            <div className="h-20 rounded-xl bg-slate-100" />
-            <div className="h-20 rounded-xl bg-slate-100" />
-            <div className="h-20 rounded-xl bg-slate-100" />
-          </div>
-          <div className="mt-7 h-12 rounded-xl bg-slate-100" />
+          <div className="mt-8 h-12 rounded-xl bg-slate-100" />
           <div className="mt-4 h-12 rounded-xl bg-slate-100" />
           <div className="mt-6 h-12 rounded-xl bg-brand-100" />
         </div>

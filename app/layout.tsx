@@ -1,13 +1,30 @@
 import type { Metadata } from 'next'
 import './globals.css'
 
+const SITE_URL = 'https://portal-tapak-suci.vercel.app'
+const DESKRIPSI =
+  'Portal resmi Tapak Suci Putera Muhammadiyah dan Sanggar Surya Manggala Integra: prestasi di gelanggang, seni pertunjukan pentas, jadwal latihan, dan berita organisasi.'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Portal Informasi Tapak Suci',
     template: '%s | Tapak Suci',
   },
-  description:
-    'Portal informasi organisasi pencak silat Tapak Suci: berita, kegiatan, anggota, galeri, dokumen, dan keuangan.',
+  description: DESKRIPSI,
+  openGraph: {
+    type: 'website',
+    locale: 'id_ID',
+    url: '/',
+    siteName: 'Portal Informasi Tapak Suci',
+    title: 'Portal Informasi Tapak Suci',
+    description: DESKRIPSI,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Portal Informasi Tapak Suci',
+    description: DESKRIPSI,
+  },
 }
 
 export default function RootLayout({

@@ -71,7 +71,7 @@ export default async function AuthLayout({
                 <span className="block text-base font-bold leading-tight tracking-tight">
                   Tapak Suci
                 </span>
-                <span className="block text-[11px] font-medium uppercase tracking-[0.2em] text-white/55">
+                <span className="block text-xs font-medium uppercase tracking-[0.2em] text-white/70">
                   Portal Resmi
                 </span>
               </span>
@@ -85,7 +85,7 @@ export default async function AuthLayout({
           </header>
 
           <div className="relative z-10 max-w-xl animate-fade-up">
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-amber-200">
+            <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-amber-200">
               <Sparkles size={13} /> Pembinaan Generasi Berakhlak
             </span>
 
@@ -114,7 +114,7 @@ export default async function AuthLayout({
                 >
                   <item.icon size={17} className="text-amber-200" />
                   <p className="mt-3 text-2xl font-bold leading-none">{item.value}</p>
-                  <p className="mt-1.5 text-[11px] uppercase tracking-wide text-white/50">
+                  <p className="mt-1.5 text-xs uppercase tracking-wide text-white/70">
                     {item.label}
                   </p>
                 </div>
@@ -127,13 +127,13 @@ export default async function AuthLayout({
                 Dengan iman dan akhlak saya menjadi kuat, tanpa iman dan akhlak saya menjadi
                 lemah.
               </blockquote>
-              <figcaption className="mt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/45">
+              <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/70">
                 Motto Tapak Suci
               </figcaption>
             </figure>
           </div>
 
-          <footer className="relative z-10 flex items-center justify-between text-[11px] text-white/45">
+          <footer className="relative z-10 flex items-center justify-between text-xs text-white/70">
             <span className="inline-flex items-center gap-1.5">
               <ShieldCheck size={13} /> Data tersimpan aman di cloud
             </span>
@@ -153,7 +153,7 @@ export default async function AuthLayout({
                 <span className="block text-sm font-bold leading-tight text-slate-900">
                   Tapak Suci
                 </span>
-                <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-700">
+                <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">
                   Portal Informasi
                 </span>
               </span>
@@ -170,7 +170,7 @@ export default async function AuthLayout({
             <div className="w-full max-w-[450px] animate-fade-up">{children}</div>
           </div>
 
-          <footer className="hidden items-center justify-between border-t border-slate-200/70 px-10 py-5 text-[11px] text-slate-400 lg:flex">
+          <footer className="hidden items-center justify-between border-t border-slate-200/70 px-10 py-5 text-xs text-slate-600 lg:flex">
             <span>© {tahun} Tapak Suci Putera Muhammadiyah</span>
             <span>Dibangun untuk kemajuan organisasi</span>
           </footer>

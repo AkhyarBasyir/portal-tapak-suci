@@ -93,7 +93,7 @@ Data contoh yang sudah masuk: 4 anggota, 2 kegiatan, 2 berita, 2 media, 2 catata
 4. Script di atas akan membuat:
    - semua tabel + enum,
    - function keamanan (`is_admin`, `is_pengurus`),
-   - trigger profil otomatis saat user daftar,
+   - trigger profil otomatis saat admin membuat akun,
    - kebijakan RLS,
    - bucket `media` (publik) dan `bukti` (privat),
    - data contoh.
@@ -125,7 +125,7 @@ set role = 'pengurus'
 where email = 'email-pengurus@example.com';
 ```
 
-> Catatan: Halaman `/register` otomatis membuat akun dengan peran **anggota**. Admin juga bisa membuat akun lengkap sekaligus mengatur perannya lewat **Dashboard → Pengguna → Tambah Pengguna**.
+> Catatan: Pendaftaran publik sudah dihapus. **Seluruh akun anggota dan pengurus dibuat oleh admin** lewat **Dashboard → Pengguna → Tambah Pengguna**, sekaligus menentukan perannya. Matikan juga *Allow new users to sign up* di **Supabase Dashboard → Authentication → Providers → Email** agar akun tidak bisa dibuat lewat API publik. Calon anggota/pengurus meminta akun melalui email/WhatsApp pengurus.
 
 ## Langkah 3 — Isi environment variable
 
@@ -175,10 +175,10 @@ Selesai. Website dapat diakses dari mana saja dan kapan saja. Komputer Anda tida
 ```text
 app/
   (public)/            # Halaman publik: beranda, berita, kegiatan, anggota, galeri, dokumen
-  (auth)/              # Halaman login & register
+  (auth)/              # Halaman login
   dashboard/           # Area terlindungi + CRUD dinamis per entitas
 components/
-  auth/                # Form login & register (client)
+  auth/                # Form login (client)
   crud/                # Komponen CRUD generik
   site-header.tsx
   site-footer.tsx

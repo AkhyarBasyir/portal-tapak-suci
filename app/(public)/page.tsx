@@ -13,12 +13,9 @@ import {
   Medal,
   Phone,
   Quote,
-  ShieldCheck,
   Sparkles,
   Swords,
   Trophy,
-  User,
-  UserCog,
   Users,
   type LucideIcon,
 } from 'lucide-react'
@@ -125,27 +122,6 @@ const prestasiDefault = [
   },
 ]
 
-const loginRoles = [
-  {
-    role: 'admin',
-    label: 'Admin',
-    icon: ShieldCheck,
-    description: 'Kelola seluruh data dan hak akses pengguna.',
-  },
-  {
-    role: 'pengurus',
-    label: 'Pengurus',
-    icon: UserCog,
-    description: 'Kelola konten, anggota, jadwal, dan prestasi.',
-  },
-  {
-    role: 'anggota',
-    label: 'Anggota',
-    icon: User,
-    description: 'Akses informasi organisasi dan program khusus.',
-  },
-]
-
 const ikonFokus: Record<string, LucideIcon> = {
   Drama: Sparkles,
   Sparkles,
@@ -228,7 +204,7 @@ export default async function HomePage() {
 
         <div className="container-page relative grid gap-14 py-20 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-28">
           <div className="animate-fade-up">
-            <span className="inline-flex animate-fade-up items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-200">
+            <span className="inline-flex animate-fade-up items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-amber-200">
               <Sparkles size={13} /> {teks('hero_kicker')}
             </span>
 
@@ -273,7 +249,7 @@ export default async function HomePage() {
                 >
                   <item.icon size={18} className="text-amber-200" />
                   <p className="mt-3 text-2xl font-extrabold leading-none">{item.value}</p>
-                  <p className="mt-1.5 text-[11px] uppercase tracking-wide text-white/50">{item.label}</p>
+                  <p className="mt-1.5 text-xs uppercase tracking-wide text-white/70">{item.label}</p>
                 </div>
               ))}
             </div>
@@ -292,7 +268,7 @@ export default async function HomePage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#170909] via-transparent to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-6">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-200">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-200">
                   Sanggar Seni Budaya
                 </p>
                 <p className="mt-1 text-2xl font-bold">{teks('sanggar_judul')}</p>
@@ -303,12 +279,12 @@ export default async function HomePage() {
             <div className="absolute -left-6 top-10 hidden animate-float rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl sm:block">
               <Swords size={22} className="text-amber-200" />
               <p className="mt-2 text-xs font-bold">Pencak Silat Tapak Suci</p>
-              <p className="text-[10px] text-white/55">Gerak yang berakhlak</p>
+              <p className="text-xs text-white/70">Gerak yang berakhlak</p>
             </div>
 
             <div className="absolute -right-4 bottom-24 hidden animate-float rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl [animation-delay:1.5s] sm:block">
               <Quote size={18} className="text-amber-200" />
-              <p className="mt-2 max-w-[170px] text-[11px] italic leading-relaxed text-white/75">
+              <p className="mt-2 max-w-[170px] text-xs italic leading-relaxed text-white/75">
                 Iman dan akhlak menjadi pondasi setiap gerak.
               </p>
             </div>
@@ -317,7 +293,7 @@ export default async function HomePage() {
 
         <div className="relative border-t border-white/10 py-4">
           <div className="marquee-mask overflow-hidden">
-            <div className="flex w-max animate-marquee items-center gap-8 whitespace-nowrap text-[11px] font-bold uppercase tracking-[0.25em] text-white/45">
+            <div className="flex w-max animate-marquee items-center gap-8 whitespace-nowrap text-xs font-bold uppercase tracking-[0.25em] text-white/70">
               {Array.from({ length: 2 }).map((_, loop) => (
                 <span key={loop} className="flex items-center gap-8">
                   <span>Pencak Silat Tapak Suci</span>
@@ -360,7 +336,7 @@ export default async function HomePage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#1b0808] via-[#1b0808]/55 to-transparent" />
             <div className="absolute inset-x-0 top-0 flex items-center justify-between p-6">
-              <span className="rounded-full border border-white/25 bg-black/25 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-200 backdrop-blur">
+              <span className="rounded-full border border-white/25 bg-black/25 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-amber-200 backdrop-blur">
                 Bidang 01
               </span>
               <Trophy size={24} className="text-white/80" />
@@ -390,7 +366,7 @@ export default async function HomePage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#2a0c0a] via-[#2a0c0a]/55 to-transparent" />
             <div className="absolute inset-x-0 top-0 flex items-center justify-between p-6">
-              <span className="rounded-full border border-white/25 bg-black/25 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-200 backdrop-blur">
+              <span className="rounded-full border border-white/25 bg-black/25 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-amber-200 backdrop-blur">
                 Bidang 02
               </span>
               <Sparkles size={24} className="text-white/80" />
@@ -427,14 +403,14 @@ export default async function HomePage() {
                 <p className="flex items-center gap-2 text-xs font-bold text-amber-200">
                   <BookOpen size={15} /> Berlandaskan Al-Qur&apos;an dan Sunnah
                 </p>
-                <p className="mt-1.5 text-[11px] leading-relaxed text-white/70">
+                <p className="mt-1.5 text-xs leading-relaxed text-white/70">
                   Setiap pertunjukan adalah dakwah nilai melalui gerak, cerita, dan adab.
                 </p>
               </div>
             </div>
             <div className="absolute -bottom-5 -right-3 hidden rounded-2xl border border-brand-100 bg-white p-4 shadow-xl sm:block">
               <p className="text-3xl font-extrabold text-brand-700">5</p>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Fokus kreatif</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Fokus kreatif</p>
             </div>
           </div>
 
@@ -458,8 +434,8 @@ export default async function HomePage() {
                     </span>
                     <div className="min-w-0">
                       <p className="text-sm font-bold text-slate-900">{item.judul}</p>
-                      <p className="text-[11px] font-semibold text-brand-700">{item.subtitle}</p>
-                      <p className="mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-slate-500">
+                      <p className="text-xs font-semibold text-brand-700">{item.subtitle}</p>
+                      <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-slate-500">
                         {item.deskripsi}
                       </p>
                     </div>
@@ -517,7 +493,7 @@ export default async function HomePage() {
                   <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-700 to-brand-900 text-center text-white shadow-lg">
                     <span>
                       <span className="block text-xl font-extrabold leading-none">{tgl.hari}</span>
-                      <span className="text-[10px] font-bold uppercase tracking-wide text-amber-200">
+                      <span className="text-xs font-bold uppercase tracking-wide text-amber-200">
                         {tgl.bulan}
                       </span>
                     </span>
@@ -526,7 +502,7 @@ export default async function HomePage() {
                     <h3 className="line-clamp-2 font-bold leading-snug text-slate-900 group-hover:text-brand-700">
                       {item.judul}
                     </h3>
-                    <div className="mt-3 space-y-1.5 text-[11px] text-slate-500">
+                    <div className="mt-3 space-y-1.5 text-xs text-slate-500">
                       {item.hari && (
                         <p className="flex items-center gap-1.5">
                           <CalendarDays size={13} className="text-brand-500" /> {item.hari}
@@ -554,23 +530,23 @@ export default async function HomePage() {
             <div className="stage-grid absolute inset-0 opacity-60" />
             <div className="noise-overlay" />
             <div className="relative">
-              <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-200">
+              <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-amber-200">
                 <CalendarDays size={13} /> Agenda Mendatang
               </span>
               <div className="mt-6 space-y-3">
                 {kegiatan.length === 0 && (
-                  <p className="text-sm text-white/55">Belum ada agenda terjadwal.</p>
+                  <p className="text-sm text-white/70">Belum ada agenda terjadwal.</p>
                 )}
                 {kegiatan.map((item: Baris) => (
                   <div
                     key={item.id}
                     className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 transition hover:border-amber-300/30 hover:bg-white/10"
                   >
-                    <p className="text-[11px] font-semibold text-amber-200">
+                    <p className="text-xs font-semibold text-amber-200">
                       {formatDate(item.tanggal_mulai)} · {item.jenis}
                     </p>
                     <p className="mt-1.5 text-sm font-bold leading-snug">{item.judul}</p>
-                    {item.lokasi && <p className="mt-1 text-[11px] text-white/50">{item.lokasi}</p>}
+                    {item.lokasi && <p className="mt-1 text-xs text-white/70">{item.lokasi}</p>}
                   </div>
                 ))}
               </div>
@@ -600,16 +576,16 @@ export default async function HomePage() {
             <div className="mt-5 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
               {penampilan.map((item: Baris) => (
                 <div key={item.id} className="rounded-2xl border border-white bg-white p-4 shadow-sm">
-                  <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold text-amber-800">
+                  <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-800">
                     {item.jenis}
                   </span>
                   <p className="mt-2.5 line-clamp-2 text-sm font-bold leading-snug text-slate-900">
                     {item.judul}
                   </p>
-                  <p className="mt-2 text-[11px] text-slate-500">
+                  <p className="mt-2 text-xs text-slate-500">
                     {formatDate(item.tanggal_mulai)} · {jamSingkat(item.jam_mulai)} WIB
                   </p>
-                  <p className="mt-1 line-clamp-1 text-[11px] text-slate-500">{item.lokasi}</p>
+                  <p className="mt-1 line-clamp-1 text-xs text-slate-500">{item.lokasi}</p>
                 </div>
               ))}
             </div>
@@ -653,16 +629,16 @@ export default async function HomePage() {
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 <div className="absolute left-4 top-4 flex gap-2">
-                  <span className="rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-bold text-brand-700 backdrop-blur">
+                  <span className="rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-brand-700 backdrop-blur">
                     {item.kategori}
                   </span>
-                  <span className="rounded-full bg-brand-700/90 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur">
+                  <span className="rounded-full bg-brand-700/90 px-2.5 py-1 text-xs font-bold text-white backdrop-blur">
                     {item.tingkat}
                   </span>
                 </div>
               </div>
               <div className="flex flex-1 flex-col p-5">
-                <p className="text-[11px] font-semibold text-slate-400">{formatDate(item.tanggal)}</p>
+                <p className="text-xs font-semibold text-slate-600">{formatDate(item.tanggal)}</p>
                 <h3 className="mt-2 line-clamp-2 font-bold leading-snug text-slate-900">
                   {item.judul}
                 </h3>
@@ -712,7 +688,7 @@ export default async function HomePage() {
                 )}
               </div>
               <div className="flex flex-1 flex-col p-5">
-                <p className="text-[11px] text-slate-400">
+                <p className="text-xs text-slate-600">
                   {formatDate(item.published_at)} · {item.penulis || 'Pengurus'}
                 </p>
                 <h3 className="mt-2 line-clamp-2 font-bold leading-snug text-slate-900 group-hover:text-brand-700">
@@ -723,54 +699,6 @@ export default async function HomePage() {
               </div>
             </Link>
           ))}
-        </div>
-      </section>
-
-      {/* AKSES SISTEM */}
-      <section className="relative overflow-hidden bg-[#1b0808] py-16 text-white sm:py-24" id="akses">
-        <div className="stage-grid absolute inset-0 opacity-60" />
-        <div className="noise-overlay" />
-        <div className="absolute left-1/2 top-0 h-72 w-[36rem] -translate-x-1/2 rounded-full bg-brand-600/20 blur-3xl" />
-        <div className="container-page relative">
-          <div className="mx-auto max-w-2xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/25 bg-amber-300/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-200">
-              <ShieldCheck size={13} /> Akses Sistem
-            </span>
-            <h2 className="mt-5 text-3xl font-extrabold sm:text-4xl">Masuk sesuai peran Anda</h2>
-            <p className="mt-3 text-sm leading-relaxed text-white/60">
-              Hak akses ditetapkan oleh admin/pengurus melalui sistem, bukan hanya pilihan di
-              halaman masuk.
-            </p>
-          </div>
-
-          <div className="mx-auto mt-10 grid max-w-5xl gap-4 md:grid-cols-3">
-            {loginRoles.map((item) => {
-              const Icon = item.icon
-              return (
-                <Link
-                  key={item.role}
-                  href={`/login?role=${item.role}`}
-                  className="showcase-glass group rounded-2xl p-6 text-center transition duration-300 hover:-translate-y-2 hover:border-amber-300/50 hover:bg-white/10"
-                >
-                  <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-800 text-white shadow-lg transition group-hover:rotate-6">
-                    <Icon size={23} />
-                  </span>
-                  <h3 className="mt-4 text-lg font-bold">Masuk sebagai {item.label}</h3>
-                  <p className="mt-2 text-xs leading-relaxed text-white/55">{item.description}</p>
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-amber-200">
-                    Lanjut masuk <ArrowRight size={14} className="transition group-hover:translate-x-1" />
-                  </span>
-                </Link>
-              )
-            })}
-          </div>
-
-          <p className="mt-8 text-center text-sm text-white/55">
-            Belum punya akun?{' '}
-            <Link href="/register" className="font-bold text-amber-200 hover:underline">
-              Daftar sebagai anggota
-            </Link>
-          </p>
         </div>
       </section>
 
@@ -798,15 +726,9 @@ export default async function HomePage() {
                 {nilai(konten, 'cta_deskripsi', 'deskripsi', kontenDefault.cta_deskripsi)}
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Link
-                  href="/register"
-                  className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-brand-800 transition hover:-translate-y-1"
-                >
-                  Daftar anggota <ArrowRight size={16} />
-                </Link>
                 <a
                   href="mailto:pimpinanpusattapaksuci@gmail.com"
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 py-3 text-sm font-bold backdrop-blur transition hover:bg-white/10"
+                  className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-brand-800 transition hover:-translate-y-1"
                 >
                   <Mail size={16} /> Hubungi kami
                 </a>
@@ -831,7 +753,7 @@ export default async function HomePage() {
                   <a href="tel:+6281529051101" className="hover:text-white">+62 815 2905 1101</a>
                 </p>
               </div>
-              <p className="mt-5 border-t border-white/10 pt-4 text-[11px] italic leading-relaxed text-amber-100/70">
+              <p className="mt-5 border-t border-white/10 pt-4 text-xs italic leading-relaxed text-amber-100/70">
                 “{teks('motto')}”
               </p>
             </div>

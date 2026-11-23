@@ -60,7 +60,7 @@ export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-40">
       <div className="bg-gradient-to-r from-[#3b0a0a] via-brand-800 to-[#4a1408] text-white">
-        <div className="container-page flex h-8 items-center justify-between text-[10px] font-semibold uppercase tracking-[0.16em] sm:text-[11px]">
+        <div className="container-page flex h-8 items-center justify-between text-xs font-semibold uppercase tracking-[0.16em] sm:text-xs">
           <span className="truncate">Portal Resmi Tapak Suci Putera Muhammadiyah</span>
           <span className="hidden shrink-0 items-center gap-2 text-amber-200 sm:flex">
             <span className="h-1 w-1 rounded-full bg-amber-300" />
@@ -86,7 +86,7 @@ export default function SiteHeader() {
               <span className="block text-[15px] font-extrabold tracking-tight text-slate-900">
                 Tapak Suci
               </span>
-              <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-700">
+              <span className="block text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">
                 Surya Manggala Integra
               </span>
             </span>

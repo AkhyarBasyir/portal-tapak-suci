@@ -38,7 +38,7 @@ export default function SiteFooter() {
             </span>
             <span>
               <span className="block font-bold leading-tight">Tapak Suci</span>
-              <span className="block text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-200/80">
+              <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-amber-200/80">
                 Putera Muhammadiyah
               </span>
             </span>
@@ -101,7 +101,7 @@ export default function SiteFooter() {
       </div>
 
       <div className="relative border-t border-white/10">
-        <div className="container-page flex flex-col gap-2 py-5 text-[11px] text-white/45 sm:flex-row sm:items-center sm:justify-between">
+        <div className="container-page flex flex-col gap-2 py-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} Tapak Suci Putera Muhammadiyah. Seluruh hak dilindungi.</span>
           <span>Dibangun dengan nilai iman, akhlak, dan persaudaraan.</span>
         </div>

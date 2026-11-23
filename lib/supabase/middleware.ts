@@ -36,7 +36,7 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   const path = request.nextUrl.pathname
-  const isAuthPage = path === '/login' || path === '/register'
+  const isAuthPage = path === '/login'
 
   if (!user && path.startsWith('/dashboard')) {
     const redirectUrl = request.nextUrl.clone()

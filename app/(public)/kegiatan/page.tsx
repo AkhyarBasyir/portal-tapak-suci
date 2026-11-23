@@ -27,12 +27,12 @@ export default async function KegiatanPage() {
             </div>
             <div className="mt-4 space-y-2 text-sm text-slate-600">
               <p className="flex items-center gap-2">
-                <CalendarDays size={16} className="text-slate-400" />
+                <CalendarDays size={16} className="text-slate-500" />
                 {formatDate(item.tanggal_mulai)}
                 {item.tanggal_selesai && ` s.d. ${formatDate(item.tanggal_selesai)}`}
               </p>
               <p className="flex items-center gap-2">
-                <MapPin size={16} className="text-slate-400" />
+                <MapPin size={16} className="text-slate-500" />
                 {item.lokasi || 'Lokasi belum ditentukan'}
               </p>
             </div>

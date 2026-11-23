@@ -30,7 +30,7 @@ export async function createClient() {
             cookieStore.set(name, value, options)
           })
         } catch {
-          // Di Server Component, cookie tidak bisa ditulis. Middleware yang akan menyegarkan sesi.
+          // Di Server Component, cookie tidak bisa ditulis. Proxy yang akan menyegarkan sesi.
         }
       },
     },

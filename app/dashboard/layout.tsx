@@ -116,7 +116,7 @@ export default async function DashboardLayout({
         <header className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
           <div>
             <p className="text-sm font-semibold text-slate-900">Dashboard</p>
-            <p className="text-xs text-slate-500">Masuk sebagai {session.profile.role}</p>
+            <p className="text-xs text-slate-500">Peran: {session.profile.role}</p>
           </div>
           <div className="lg:hidden">
             <LogoutButton />

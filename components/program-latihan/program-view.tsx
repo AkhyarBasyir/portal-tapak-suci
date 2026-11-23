@@ -53,7 +53,7 @@ function Detail({
     <div className="flex items-start gap-2 text-sm text-slate-600">
       <Icon size={16} className="mt-0.5 shrink-0 text-brand-500" />
       <span>
-        <span className="text-slate-400">{label}: </span>
+        <span className="text-slate-600">{label}: </span>
         <span className="font-medium text-slate-700">{value}</span>
       </span>
     </div>
@@ -144,7 +144,7 @@ export default function ProgramLatihanView({ umum, khusus, penerima, profile }: 
                 >
                   <stat.icon size={18} className="text-white/70" />
                   <p className="mt-2 text-2xl font-bold leading-none">{stat.value}</p>
-                  <p className="mt-1 text-[11px] text-white/70">{stat.label}</p>
+                  <p className="mt-1 text-xs text-white/70">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -175,7 +175,7 @@ export default function ProgramLatihanView({ umum, khusus, penerima, profile }: 
               >
                 <ShieldCheck size={16} /> Program Khusus
                 {belumDibaca > 0 && (
-                  <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[11px] font-bold text-brand-700">
+                  <span className="rounded-full bg-brand-100 px-2 py-0.5 text-xs font-bold text-brand-700">
                     {belumDibaca}
                   </span>
                 )}
@@ -201,7 +201,7 @@ export default function ProgramLatihanView({ umum, khusus, penerima, profile }: 
               <div className="relative w-full lg:max-w-xs">
                 <Search
                   size={16}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-600"
                 />
                 <input
                   type="search"
@@ -319,17 +319,17 @@ export default function ProgramLatihanView({ umum, khusus, penerima, profile }: 
                   <Lock size={26} />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">Perlu masuk sebagai anggota</h3>
+                  <h3 className="text-lg font-bold text-slate-900">Perlu masuk ke akun Anda</h3>
                   <p className="mx-auto mt-1 max-w-md text-sm text-slate-600">
                     Program khusus hanya dapat dilihat oleh anggota yang telah ditunjuk.
                     Masuk dengan akun Anda untuk melihatnya.
                   </p>
                 </div>
                 <Link
-                  href="/login?role=anggota&next=/program-latihan"
+                  href="/login?next=/program-latihan"
                   className="btn-primary"
                 >
-                  Masuk sebagai anggota <ArrowRight size={16} />
+                  Masuk ke akun Anda <ArrowRight size={16} />
                 </Link>
               </div>
             ) : khusus.length === 0 ? (
@@ -395,7 +395,7 @@ export default function ProgramLatihanView({ umum, khusus, penerima, profile }: 
                           </p>
                         )}
                         <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
-                          <span className="text-xs text-slate-400">
+                          <span className="text-xs text-slate-600">
                             {formatDate(item.created_at)}
                           </span>
                           {penerimaSaya && (
