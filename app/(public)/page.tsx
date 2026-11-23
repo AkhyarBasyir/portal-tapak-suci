@@ -190,6 +190,7 @@ export default async function HomePage() {
             alt=""
             fill
             priority
+            quality={70}
             sizes="100vw"
             className="object-cover object-center opacity-35"
           />
@@ -263,7 +264,8 @@ export default async function HomePage() {
                 alt="Penampilan seni budaya Tapak Suci"
                 width={900}
                 height={1200}
-                priority
+                quality={70}
+                sizes="(min-width: 1024px) 42vw, 100vw"
                 className="h-[420px] w-full object-cover object-center sm:h-[540px]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#170909] via-transparent to-transparent" />

@@ -254,15 +254,24 @@ export default function ProgramAdmin({
   }
 
   async function unggahGambar(file: File) {
+    const ext = file.name.split('.').pop()?.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || 'bin'
+    if (file.size > 5 * 1024 * 1024) {
+      setNotice({ type: 'gagal', text: 'Ukuran gambar maksimal 5 MB.' })
+      return
+    }
+    if (!file.type.startsWith('image/') || !['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) {
+      setNotice({ type: 'gagal', text: 'Format gambar tidak didukung.' })
+      return
+    }
+
     setMengunggah(true)
     const supabase = createClient()
-    const ext = file.name.split('.').pop()?.replace(/[^a-zA-Z0-9]/g, '') || 'bin'
     const path = `program-latihan/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`
     const { error } = await supabase.storage
       .from('media')
-      .upload(path, file, { upsert: true, contentType: file.type })
+      .upload(path, file, { upsert: false, contentType: file.type })
     if (error) {
-      setNotice({ type: 'gagal', text: `Gagal mengunggah gambar: ${error.message}` })
+      setNotice({ type: 'gagal', text: 'Gagal mengunggah gambar. Silakan coba lagi.' })
     } else {
       atur('gambar_url', supabase.storage.from('media').getPublicUrl(path).data.publicUrl)
     }
@@ -327,13 +336,23 @@ export default function ProgramAdmin({
       const hapus = lama.filter((id) => !form.penerima.includes(id))
       const tambah = form.penerima.filter((id) => !lama.includes(id))
       if (hapus.length) {
-        await supabase.from('program_khusus_penerima').delete()
+        const { error: hapusError } = await supabase.from('program_khusus_penerima').delete()
           .eq('program_id', programId).in('profil_id', hapus)
+        if (hapusError) {
+          setNotice({ type: 'gagal', text: 'Program tersimpan, tetapi penerima gagal dihapus.' })
+          setMenyimpan(false)
+          return
+        }
       }
       if (tambah.length) {
-        await supabase.from('program_khusus_penerima').insert(
+        const { error: tambahError } = await supabase.from('program_khusus_penerima').insert(
           tambah.map((profil_id) => ({ program_id: programId, profil_id })),
         )
+        if (tambahError) {
+          setNotice({ type: 'gagal', text: 'Program tersimpan, tetapi penerima gagal ditambahkan.' })
+          setMenyimpan(false)
+          return
+        }
       }
       setPenerimaMap((prev) => ({ ...prev, [programId!]: form.penerima }))
       setRowsKhusus((prev) => {
@@ -414,8 +433,16 @@ export default function ProgramAdmin({
       return
     }
     if (mode === 'umum') setRowsUmum((prev) => prev.filter((p) => p.id !== id))
-    else setRowsKhusus((prev) => prev.filter((p) => p.id !== id))
+    else {
+      setRowsKhusus((prev) => prev.filter((p) => p.id !== id))
+      setPenerimaMap((prev) => {
+        const next = { ...prev }
+        delete next[id]
+        return next
+      })
+    }
     setNotice({ type: 'sukses', text: 'Program dihapus.' })
+    router.refresh()
   }
 
   return (

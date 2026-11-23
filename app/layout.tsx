@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-
-const SITE_URL = 'https://portal-tapak-suci.vercel.app'
+import { SITE_URL } from '@/lib/constants'
 const DESKRIPSI =
   'Portal resmi Tapak Suci Putera Muhammadiyah dan Sanggar Surya Manggala Integra: prestasi di gelanggang, seni pertunjukan pentas, jadwal latihan, dan berita organisasi.'
 

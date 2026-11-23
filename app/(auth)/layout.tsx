@@ -10,10 +10,6 @@ import {
   Sparkles,
   Users,
 } from 'lucide-react'
-import { getDashboardStats } from '@/lib/data'
-
-export const dynamic = 'force-dynamic'
-
 function LogoMark({ ukuran = 44 }: { ukuran?: number }) {
   return (
     <span
@@ -32,12 +28,11 @@ function LogoMark({ ukuran = 44 }: { ukuran?: number }) {
   )
 }
 
-export default async function AuthLayout({
+export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const stats = await getDashboardStats()
   const tahun = new Date().getFullYear()
 
   return (
@@ -104,18 +99,18 @@ export default async function AuthLayout({
 
             <div className="mt-9 grid max-w-lg grid-cols-3 gap-3">
               {[
-                { icon: Users, value: stats.anggota ?? 0, label: 'Anggota' },
-                { icon: CalendarDays, value: stats.kegiatan ?? 0, label: 'Kegiatan' },
-                { icon: Newspaper, value: stats.berita ?? 0, label: 'Berita' },
+                { icon: Users, label: 'Anggota', detail: 'Satu komunitas' },
+                { icon: CalendarDays, label: 'Jadwal', detail: 'Latihan & kegiatan' },
+                { icon: Newspaper, label: 'Berita', detail: 'Info terbaru' },
               ].map((item) => (
                 <div
                   key={item.label}
                   className="rounded-2xl border border-white/12 bg-white/[0.07] p-3.5 backdrop-blur-md transition hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.11]"
                 >
                   <item.icon size={17} className="text-amber-200" />
-                  <p className="mt-3 text-2xl font-bold leading-none">{item.value}</p>
-                  <p className="mt-1.5 text-xs uppercase tracking-wide text-white/70">
-                    {item.label}
+                  <p className="mt-3 text-sm font-bold leading-none">{item.label}</p>
+                  <p className="mt-1.5 text-[11px] leading-tight text-white/70">
+                    {item.detail}
                   </p>
                 </div>
               ))}

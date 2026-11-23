@@ -14,18 +14,25 @@ import {
   Mail,
   Sparkles,
 } from 'lucide-react'
+import { CONTACT_EMAIL } from '@/lib/constants'
 import { createClient } from '@/lib/supabase/client'
 
 const kunciIngat = 'tapaksuci_ingat_identifier'
+
+/** Hanya izinkan path internal. Blokir `//` dan `\` yang bisa jadi open redirect. */
+function nextAman(value: string | null): string {
+  if (!value) return '/dashboard'
+  if (!value.startsWith('/') || value.startsWith('//') || value.includes('\\')) {
+    return '/dashboard'
+  }
+  return value
+}
 
 export default function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const nextParam = searchParams.get('next')
-  const next = nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')
-    ? nextParam
-    : '/dashboard'
+  const next = nextAman(searchParams.get('next'))
 
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
@@ -67,14 +74,23 @@ export default function LoginForm() {
 
     const supabase = createClient()
 
-    // Username dan email keduanya diterima. Jika input bukan email,
-    // resolver database mencari email berdasarkan username.
-    const { data: resolvedEmail, error: resolveError } = await supabase.rpc(
-      'email_for_login',
-      { identifier: bersih },
-    )
+    // Resolver dipanggil lewat API server agar RPC tidak terekspos ke anon.
+    let resolvedEmail = ''
+    try {
+      const respons = await fetch('/api/auth/resolve-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: bersih }),
+      })
+      if (respons.ok) {
+        const hasil = await respons.json()
+        resolvedEmail = typeof hasil.email === 'string' ? hasil.email : ''
+      }
+    } catch {
+      // Ditolak di bawah dengan pesan generik yang sama.
+    }
 
-    if (resolveError || !resolvedEmail) {
+    if (!resolvedEmail) {
       gagal('Username atau email tidak ditemukan. Periksa kembali tulisan Anda.')
       return
     }
@@ -212,7 +228,7 @@ export default function LoginForm() {
           Ingat username di perangkat ini
         </label>
         <a
-          href="mailto:pimpinanpusattapaksuci@gmail.com?subject=Bantuan%20akses%20portal%20Tapak%20Suci"
+          href={`mailto:${CONTACT_EMAIL}?subject=Bantuan%20akses%20portal%20Tapak%20Suci`}
           className="text-xs font-semibold text-brand-700 transition hover:underline"
         >
           Butuh bantuan akses?
@@ -242,7 +258,7 @@ export default function LoginForm() {
         <p className="text-xs leading-relaxed text-slate-600">
           Akun anggota dan pengurus diberikan oleh admin. Belum punya akun?{' '}
           <a
-            href="mailto:pimpinanpusattapaksuci@gmail.com?subject=Permintaan%20akun%20portal%20Tapak%20Suci"
+            href={`mailto:${CONTACT_EMAIL}?subject=Permintaan%20akun%20portal%20Tapak%20Suci`}
             className="font-semibold text-brand-700 transition hover:underline"
           >
             Minta akun ke admin

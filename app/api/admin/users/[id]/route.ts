@@ -1,9 +1,10 @@
+import { randomUUID } from 'node:crypto'
+import { safeError } from '@/lib/api-error'
 import { getSessionProfile } from '@/lib/auth'
+import { ROLES } from '@/lib/constants'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export const dynamic = 'force-dynamic'
-
-const ROLES = ['admin', 'pengurus', 'anggota']
 
 export async function PATCH(
   request: Request,
@@ -37,7 +38,7 @@ export async function PATCH(
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
     return Response.json({ error: 'Email wajib diisi dengan format yang benar.' }, { status: 400 })
   }
-  if (!ROLES.includes(role)) {
+  if (!(ROLES as readonly string[]).includes(role)) {
     return Response.json({ error: 'Peran tidak dikenal.' }, { status: 400 })
   }
   if (password && password.length < 6) {
@@ -52,16 +53,35 @@ export async function PATCH(
       return Response.json({ error: 'Akun tidak ditemukan.' }, { status: 404 })
     }
 
-    if (email !== current.user.email) {
-      const { error: emailError } = await admin.auth.admin.updateUserById(id, { email })
-      if (emailError) {
-        return Response.json({ error: `Email gagal diperbarui: ${emailError.message}` }, { status: 400 })
+    const emailLama = (current.user.email ?? '').toLowerCase()
+
+    const { data: targetProfile } = await admin
+      .from('profiles')
+      .select('role')
+      .eq('id', id)
+      .maybeSingle()
+
+    // Jangan biarkan admin terakhir menurunkan dirinya sendiri.
+    if (targetProfile?.role === 'admin' && role !== 'admin' && id === session.user.id) {
+      const { count } = await admin
+        .from('profiles')
+        .select('id', { count: 'exact', head: true })
+        .eq('role', 'admin')
+      if ((count ?? 0) <= 1) {
+        return Response.json(
+          { error: 'Tidak bisa menurunkan peran: masih ada satu admin aktif.' },
+          { status: 400 },
+        )
       }
     }
-    if (password) {
-      const { error: passwordError } = await admin.auth.admin.updateUserById(id, { password })
-      if (passwordError) {
-        return Response.json({ error: `Password gagal diperbarui: ${passwordError.message}` }, { status: 400 })
+
+    const authUpdate: { email?: string; password?: string } = {}
+    if (email !== emailLama) authUpdate.email = email
+    if (password) authUpdate.password = password
+    if (Object.keys(authUpdate).length) {
+      const { error: authError } = await admin.auth.admin.updateUserById(id, authUpdate)
+      if (authError) {
+        return Response.json({ error: safeError(authError, 'Akun gagal diperbarui.') }, { status: 400 })
       }
     }
 
@@ -78,13 +98,49 @@ export async function PATCH(
       })
       .eq('id', id)
     if (profileError) {
-      return Response.json({ error: `Profil gagal diperbarui: ${profileError.message}` }, { status: 500 })
+      return Response.json({ error: safeError(profileError, 'Profil gagal diperbarui.') }, { status: 500 })
+    }
+
+    // Sinkronkan data anggota agar daftar anggota tidak menampilkan data lama.
+    const { data: anggotaLama } = await admin
+      .from('anggota')
+      .select('id')
+      .eq('email', emailLama)
+      .limit(1)
+
+    const dataAnggota = {
+      nama,
+      jabatan: jabatan || 'Anggota',
+      telepon: telepon || null,
+      email,
+      updated_at: new Date().toISOString(),
+    }
+
+    if (anggotaLama?.length) {
+      const { error: anggotaError } = await admin
+        .from('anggota')
+        .update(dataAnggota)
+        .eq('id', anggotaLama[0].id)
+      if (anggotaError) {
+        return Response.json({ error: safeError(anggotaError, 'Data anggota gagal diperbarui.') }, { status: 500 })
+      }
+    } else {
+      const { error: anggotaError } = await admin.from('anggota').insert({
+        nip: `TS-${new Date().getFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`,
+        ...dataAnggota,
+        jenjang: 'Pengenal',
+        status: 'Aktif',
+        tanggal_masuk: new Date().toISOString().slice(0, 10),
+      })
+      if (anggotaError) {
+        return Response.json({ error: safeError(anggotaError, 'Data anggota gagal disimpan.') }, { status: 500 })
+      }
     }
 
     return Response.json({ ok: true })
   } catch (error) {
     return Response.json(
-      { error: error instanceof Error ? error.message : 'Gagal mengubah pengguna.' },
+      { error: safeError(error, 'Gagal mengubah pengguna.') },
       { status: 500 },
     )
   }

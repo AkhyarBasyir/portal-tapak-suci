@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowUpRight,Mail,MapPin,Phone,Quote } from 'lucide-react'
+import { ArrowUpRight, Mail, MapPin, Phone, Quote } from 'lucide-react'
+import { CONTACT_EMAIL } from '@/lib/constants'
 
 const tautan = [
   { href: '/program-latihan', label: 'Program Latihan' },
@@ -88,8 +89,8 @@ export default function SiteFooter() {
             </p>
             <p className="flex items-start gap-2.5">
               <Mail size={16} className="mt-0.5 shrink-0 text-amber-200/80" />
-              <a href="mailto:pimpinanpusattapaksuci@gmail.com" className="break-all hover:text-white">
-                pimpinanpusattapaksuci@gmail.com
+              <a href={`mailto:${CONTACT_EMAIL}`} className="break-all hover:text-white">
+                {CONTACT_EMAIL}
               </a>
             </p>
             <p className="flex items-center gap-2.5">

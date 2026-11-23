@@ -1,3 +1,4 @@
+import { safeError } from '@/lib/api-error'
 import { getSessionProfile } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase/admin'
 
@@ -28,12 +29,20 @@ export async function POST(
 
   try {
     const admin = createAdminClient()
+
+    const { data: target, error: cariError } = await admin.auth.admin.getUserById(id)
+    if (cariError || !target.user) {
+      return Response.json({ error: 'Pengguna tidak ditemukan.' }, { status: 404 })
+    }
+
     const { error } = await admin.auth.admin.updateUserById(id, { password })
-    if (error) return Response.json({ error: error.message }, { status: 400 })
+    if (error) {
+      return Response.json({ error: safeError(error, 'Password gagal diperbarui.') }, { status: 400 })
+    }
     return Response.json({ ok: true })
   } catch (error) {
     return Response.json(
-      { error: error instanceof Error ? error.message : 'Gagal mengganti password.' },
+      { error: safeError(error, 'Gagal mengganti password.') },
       { status: 500 },
     )
   }

@@ -27,6 +27,8 @@ export default function CrudManager({
   const supabase = useMemo(() => createClient(), [])
 
   const [rows, setRows] = useState<Record<string, any>[]>([])
+  const [total, setTotal] = useState(0)
+  const [offset, setOffset] = useState(0)
   const [relations, setRelations] = useState<Record<string, Record<string, string>>>({})
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -43,42 +45,65 @@ export default function CrudManager({
     !config.hideDelete &&
     (role === 'admin' || (role === 'pengurus' && config.deleteRole === 'pengurus'))
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (mulai = 0) => {
     if (!config) return
     setLoading(true)
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from(config.table)
-      .select('*')
+      .select('*', { count: 'exact' })
       .order(config.orderBy ?? 'created_at', { ascending: config.ascending ?? false })
-      .limit(300)
+      .range(mulai, mulai + 299)
 
     if (error) {
-      setNotice({ type: 'error', message: error.message })
+      setNotice({ type: 'error', message: 'Gagal memuat data.' })
     } else {
-      setRows((data as Record<string, any>[]) ?? [])
+      const baru = (data as Record<string, any>[]) ?? []
+      setRows((prev) => (mulai === 0 ? baru : [...prev, ...baru]))
+      setTotal(count ?? 0)
+      setOffset(mulai + baru.length)
     }
     setLoading(false)
   }, [config, supabase])
 
   useEffect(() => {
-    load()
+    void load(0)
   }, [load])
 
   useEffect(() => {
     if (!config) return
-    config.fields.filter((field) => field.relation).forEach(async (field) => {
-      const relation = field.relation!
-      const { data } = await supabase
-        .from(relation.table)
-        .select(`${relation.value}, ${relation.label}`)
-        .order(relation.label)
+    const fields = config.fields.filter((field) => field.relation)
+    if (!fields.length) return
 
-      const map: Record<string, string> = {}
-      ;(data ?? []).forEach((item: any) => {
-        map[String(item[relation.value])] = String(item[relation.label])
-      })
-      setRelations((prev) => ({ ...prev, [field.name]: map }))
+    let aktif = true
+    void Promise.all(
+      fields.map(async (field) => {
+        const relation = field.relation!
+        try {
+          const { data, error } = await supabase
+            .from(relation.table)
+            .select(`${relation.value}, ${relation.label}`)
+            .order(relation.label)
+
+          if (error) throw error
+          const map: Record<string, string> = {}
+          ;(data ?? []).forEach((item: any) => {
+            map[String(item[relation.value])] = String(item[relation.label])
+          })
+          return [field.name, map] as const
+        } catch (error) {
+          console.error(`[crud] relasi ${field.name} gagal dimuat:`, error)
+          return null
+        }
+      }),
+    ).then((hasil) => {
+      if (!aktif) return
+      const peta = Object.fromEntries(hasil.filter((item): item is readonly [string, Record<string, string>] => item !== null))
+      setRelations((prev) => ({ ...prev, ...peta }))
     })
+
+    return () => {
+      aktif = false
+    }
   }, [config, supabase])
 
   const filtered = useMemo(() => {
@@ -177,14 +202,28 @@ export default function CrudManager({
     const bucket = field.bucket ?? 'media'
     const extension =
       file.name.split('.').pop()?.replace(/[^a-zA-Z0-9]/g, '') || 'bin'
+
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error('Ukuran file maksimal 5 MB.')
+    }
+    if (field.type === 'image' && !file.type.startsWith('image/')) {
+      throw new Error('Field ini hanya menerima file gambar.')
+    }
+    const ekstensiDiperbolehkan = field.type === 'image'
+      ? ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg']
+      : ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'jpg', 'jpeg', 'png']
+    if (!ekstensiDiperbolehkan.includes(extension.toLowerCase())) {
+      throw new Error('Format file tidak didukung.')
+    }
+
     const path = `${config.key}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`
 
     setUploadingField(field.name)
     try {
       const { error } = await supabase.storage
         .from(bucket)
-        .upload(path, file, { upsert: true, contentType: file.type })
-      if (error) throw new Error(error.message)
+        .upload(path, file, { upsert: false, contentType: file.type })
+      if (error) throw new Error('File gagal diunggah.')
 
       if (bucket === 'bukti') return path
       const { data } = supabase.storage.from(bucket).getPublicUrl(path)
@@ -211,6 +250,13 @@ export default function CrudManager({
         payload[field.name] = value
       })
 
+      const kurang = config.fields.filter(
+        (field) => field.required && (payload[field.name] === '' || payload[field.name] == null),
+      )
+      if (kurang.length) {
+        throw new Error(`${kurang.map((field) => field.label).join(', ')} wajib diisi.`)
+      }
+
       if (config.key === 'berita') {
         payload.slug = form.slug
           ? slugify(String(form.slug))
@@ -232,7 +278,7 @@ export default function CrudManager({
         type: 'success',
         message: editing ? 'Data berhasil diperbarui.' : 'Data berhasil ditambahkan.',
       })
-      await load()
+      await load(0)
     } catch (error: any) {
       setNotice({
         type: 'error',
@@ -252,7 +298,7 @@ export default function CrudManager({
       setNotice({ type: 'error', message: error.message })
     } else {
       setNotice({ type: 'success', message: 'Data berhasil dihapus.' })
-      await load()
+      await load(0)
     }
   }
 
@@ -293,6 +339,7 @@ export default function CrudManager({
             id={`field-${field.name}`}
             className="input min-h-[110px]"
             value={value}
+            required={field.required}
             placeholder={field.placeholder}
             onChange={(event) =>
               setForm((prev) => ({ ...prev, [field.name]: event.target.value }))
@@ -303,6 +350,7 @@ export default function CrudManager({
             id={`field-${field.name}`}
             className="input"
             value={value}
+            required={field.required}
             onChange={(event) =>
               setForm((prev) => ({ ...prev, [field.name]: event.target.value }))
             }
@@ -367,6 +415,7 @@ export default function CrudManager({
             className="input"
             type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : 'text'}
             value={value}
+            required={field.required}
             placeholder={field.placeholder}
             onChange={(event) =>
               setForm((prev) => ({ ...prev, [field.name]: event.target.value }))
@@ -483,6 +532,19 @@ export default function CrudManager({
           </table>
         )}
       </div>
+
+      {!loading && !search && rows.length < total && (
+        <div className="flex justify-center">
+          <button
+            type="button"
+            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-brand-300 hover:text-brand-700 disabled:opacity-60"
+            disabled={loading}
+            onClick={() => void load(offset)}
+          >
+            Muat lebih banyak ({rows.length}/{total})
+          </button>
+        </div>
+      )}
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/50 p-4 py-10">

@@ -9,15 +9,26 @@ export async function getSessionProfile(): Promise<{
     const supabase = await createClient()
     const {
       data: { user },
+      error: authError,
     } = await supabase.auth.getUser()
 
+    if (authError) {
+      console.error('[auth] gagal membaca sesi:', authError.message)
+      return null
+    }
     if (!user) return null
 
-    const { data } = await supabase
+    const { data, error: profileError } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', user.id)
       .single()
+
+    // Jangan pernah mengarang role "anggota" saat query gagal — bisa menurunkan admin.
+    if (profileError && profileError.code !== 'PGRST116') {
+      console.error('[auth] gagal membaca profil:', profileError.message)
+      return null
+    }
 
     const profile: Profile = {
       id: user.id,
@@ -31,7 +42,8 @@ export async function getSessionProfile(): Promise<{
     }
 
     return { user, profile }
-  } catch {
+  } catch (error) {
+    console.error('[auth] error tak terduga:', error)
     return null
   }
 }

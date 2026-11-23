@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
 
@@ -62,9 +63,12 @@ export default function KreditFotoPage() {
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {foto.map((item) => (
             <div key={item.file} className="showcase-card p-5">
-              <img
+              <Image
                 src={`/${item.file}`}
                 alt={item.nama}
+                width={640}
+                height={427}
+                sizes="(min-width: 640px) 45vw, (min-width: 1024px) 30vw, 100vw"
                 className="h-36 w-full rounded-xl object-cover"
               />
               <h2 className="mt-4 text-sm font-bold text-slate-900">{item.nama}</h2>

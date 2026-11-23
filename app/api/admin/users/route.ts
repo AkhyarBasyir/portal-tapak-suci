@@ -1,9 +1,10 @@
+import { randomUUID } from 'node:crypto'
+import { safeError } from '@/lib/api-error'
 import { getSessionProfile } from '@/lib/auth'
+import { ROLES } from '@/lib/constants'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export const dynamic = 'force-dynamic'
-
-const ROLES = ['admin', 'pengurus', 'anggota']
 
 export async function POST(request: Request) {
   const session = await getSessionProfile()
@@ -25,7 +26,9 @@ export async function POST(request: Request) {
   const username = String(body.username ?? '').trim().toLowerCase()
   const role = String(body.role ?? 'anggota')
   const buatAnggota = body.buat_anggota !== false
-  const nip = String(body.nip ?? '').trim() || `TS-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`
+  // Suffix UUID menghindari tabrakan NIP bila dua akun dibuat bersamaan.
+  const nip = String(body.nip ?? '').trim()
+    || `TS-${new Date().getFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`
   const jenjang = String(body.jenjang ?? '').trim()
   const jabatan = String(body.jabatan ?? '').trim()
   const cabang = String(body.cabang ?? '').trim()
@@ -40,9 +43,11 @@ export async function POST(request: Request) {
   if (!nama) {
     return Response.json({ error: 'Nama lengkap wajib diisi.' }, { status: 400 })
   }
-  if (!ROLES.includes(role)) {
+  if (!(ROLES as readonly string[]).includes(role)) {
     return Response.json({ error: 'Peran tidak dikenal.' }, { status: 400 })
   }
+
+  let userId: string | null = null
 
   try {
     const admin = createAdminClient()
@@ -54,9 +59,9 @@ export async function POST(request: Request) {
       user_metadata: { full_name: nama },
     })
     if (authError) {
-      return Response.json({ error: authError.message }, { status: 400 })
+      return Response.json({ error: safeError(authError, 'Email sudah terdaftar atau tidak valid.') }, { status: 400 })
     }
-    const userId = created.user?.id
+    userId = created.user?.id ?? null
     if (!userId) {
       return Response.json({ error: 'Akun berhasil dibuat tetapi ID tidak ditemukan.' }, { status: 500 })
     }
@@ -71,7 +76,8 @@ export async function POST(request: Request) {
       telepon: telepon || null,
     })
     if (profileError) {
-      return Response.json({ error: `Profil gagal disimpan: ${profileError.message}` }, { status: 500 })
+      await admin.auth.admin.deleteUser(userId)
+      return Response.json({ error: safeError(profileError, 'Profil gagal disimpan.') }, { status: 500 })
     }
 
     let anggotaNip: string | null = null
@@ -88,15 +94,23 @@ export async function POST(request: Request) {
         tanggal_masuk: new Date().toISOString().slice(0, 10),
       })
       if (anggotaError) {
-        return Response.json({ error: `Data anggota gagal disimpan: ${anggotaError.message}` }, { status: 500 })
+        await admin.auth.admin.deleteUser(userId)
+        return Response.json({ error: safeError(anggotaError, 'Data anggota gagal disimpan.') }, { status: 500 })
       }
       anggotaNip = nip
     }
 
     return Response.json({ ok: true, id: userId, nip: anggotaNip }, { status: 201 })
   } catch (error) {
+    if (userId) {
+      try {
+        await createAdminClient().auth.admin.deleteUser(userId)
+      } catch {
+        // Best-effort rollback; detail sudah dicatat di bawah.
+      }
+    }
     return Response.json(
-      { error: error instanceof Error ? error.message : 'Gagal menambah akun.' },
+      { error: safeError(error, 'Gagal menambah akun.') },
       { status: 500 },
     )
   }

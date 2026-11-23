@@ -25,30 +25,24 @@ export const BULAN_OPTIONS = [
   'Desember',
 ]
 
+/**
+ * Daftar jenis untuk program umum. Sengaja disamakan dengan JENIS_UMUM_PUBLIK
+ * agar semua program yang dibuat admin juga tampil di area publik/beranda.
+ * Jenis intensif/spesialisasi tersedia lewat program khusus.
+ */
 export const JENIS_UMUM_OPTIONS = [
   'Latihan Reguler',
   'Latihan Dasar',
   'Latihan Lanjutan',
-  'Latihan Intensif',
   'Pembinaan',
-  'Latihan Spesialisasi',
 ]
 
-/**
- * Jenis yang boleh tampil di area publik/beranda. Program dengan pola
- * khusus, intensif, pertandingan, kamp, maupun spesialisasi sengaja
- * dikecualikan karena ditujukan hanya untuk anggota dan pengurus.
- */
-export const JENIS_UMUM_PUBLIK = [
-  'Latihan Reguler',
-  'Latihan Dasar',
-  'Latihan Lanjutan',
-  'Pembinaan',
-]
+export const JENIS_UMUM_PUBLIK = JENIS_UMUM_OPTIONS
 
 export const JENIS_KHUSUS_OPTIONS = [
   'Latihan Khusus',
   'Latihan Intensif',
+  'Latihan Spesialisasi',
   'Latihan Persiapan Pertandingan',
   'Kamp Pelatihan',
   'Pembinaan Khusus',
