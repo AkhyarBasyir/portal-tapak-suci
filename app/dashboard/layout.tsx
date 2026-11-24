@@ -8,7 +8,6 @@ import {
   LayoutTemplate,
   Palette,
   Shield,
-  Users,
   Wallet,
   type LucideIcon,
 } from 'lucide-react'
@@ -32,12 +31,11 @@ const navItems: NavItem[] = [
   { href: '/dashboard/raport_atlet', label: 'Raport Atlet', icon: FileBarChart2 },
   { href: '/dashboard/program-saya', label: 'Program Saya', icon: Dumbbell, roles: ['anggota'] },
   { href: '/dashboard/iuran-saya', label: 'Iuran Saya', icon: Wallet, roles: ['anggota'] },
-  { href: '/dashboard/anggota', label: 'Anggota', icon: Users, roles: ['pengurus'] },
   { href: '/dashboard/program-latihan', label: 'Program Latihan', icon: Dumbbell, minRole: 'pengurus' },
   { href: '/dashboard/beranda_konten', label: 'Konten Beranda', icon: LayoutTemplate, minRole: 'pengurus' },
   { href: '/dashboard/halaman_sanggar', label: 'Halaman Sanggar', icon: Palette, minRole: 'pengurus' },
   { href: '/dashboard/keuangan', label: 'Keuangan', icon: Wallet, minRole: 'pengurus' },
-  { href: '/dashboard/pengguna', label: 'Pengguna', icon: Shield, minRole: 'admin' },
+  { href: '/dashboard/pengguna', label: 'Pengguna', icon: Shield, minRole: 'pengurus' },
 ]
 
 function visibleItems(role: Role) {

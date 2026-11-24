@@ -52,3 +52,12 @@ export function canManage(role: Profile['role'], minRole: 'admin' | 'pengurus') 
   if (minRole === 'admin') return role === 'admin'
   return role === 'admin' || role === 'pengurus'
 }
+
+/**
+ * Aturan akun: admin mengelola semua peran.
+ * Pengurus hanya boleh mengelola akun berperan anggota.
+ */
+export function canManageAccount(actor: Profile['role'], target: Profile['role']) {
+  if (actor === 'admin') return true
+  return actor === 'pengurus' && target === 'anggota'
+}

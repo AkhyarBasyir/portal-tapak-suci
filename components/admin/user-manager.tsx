@@ -8,6 +8,7 @@ import {
   Plus,
   Search,
   ShieldCheck,
+  Trash2,
   X,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -52,7 +53,7 @@ const ROLE_LABEL: Record<Role, string> = {
   anggota: 'Anggota',
 }
 
-export default function UserManager() {
+export default function UserManager({ role }: { role: Role }) {
   const supabase = useMemo(() => createClient(), [])
   const [rows, setRows] = useState<Pengguna[]>([])
   const [loading, setLoading] = useState(true)
@@ -68,10 +69,13 @@ export default function UserManager() {
 
   const load = useCallback(async () => {
     setLoading(true)
-    const { data, error } = await supabase
+    const query = supabase
       .from('profiles')
       .select('id, email, full_name, username, role, jabatan, telepon')
       .order('full_name')
+    const { data, error } = role === 'pengurus'
+      ? await query.eq('role', 'anggota')
+      : await query
 
     if (error) {
       setNotice({ type: 'error', message: error.message })
@@ -79,20 +83,21 @@ export default function UserManager() {
       setRows((data as Pengguna[]) ?? [])
     }
     setLoading(false)
-  }, [supabase])
+  }, [supabase, role])
 
   useEffect(() => {
     load()
   }, [load])
 
   const filtered = useMemo(() => {
+    const sumber = role === 'pengurus' ? rows.filter((row) => row.role === 'anggota') : rows
     const query = search.trim().toLowerCase()
-    if (!query) return rows
-    return rows.filter((row) =>
+    if (!query) return sumber
+    return sumber.filter((row) =>
       [row.full_name, row.email, row.username, row.jabatan, row.role]
         .some((value) => String(value ?? '').toLowerCase().includes(query)),
     )
-  }, [rows, search])
+  }, [rows, search, role])
 
   function ubah<K extends keyof FormPengguna>(name: K, value: FormPengguna[K]) {
     setForm((prev) => ({ ...prev, [name]: value }))
@@ -106,13 +111,14 @@ export default function UserManager() {
   }
 
   function openEdit(row: Pengguna) {
+    if (role === 'pengurus' && row.role !== 'anggota') return
     setEditing(row)
     setForm({
       full_name: row.full_name ?? '',
       email: row.email ?? '',
       username: row.username ?? '',
       password: '',
-      role: row.role ?? 'anggota',
+      role: role === 'pengurus' ? 'anggota' : row.role ?? 'anggota',
       jabatan: row.jabatan ?? '',
       telepon: row.telepon ?? '',
       buatAnggota: true,
@@ -122,6 +128,7 @@ export default function UserManager() {
   }
 
   function openPassword(row: Pengguna) {
+    if (role === 'pengurus' && row.role !== 'anggota') return
     setPasswordTarget(row)
     setPasswordBaru('')
     setPasswordUlang('')
@@ -217,13 +224,42 @@ export default function UserManager() {
     }
   }
 
+  async function hapus(row: Pengguna) {
+    const pesan = role === 'pengurus'
+      ? `Hapus akun anggota ${row.full_name}? Data anggota yang tertaut juga akan dihapus.`
+      : `Hapus akun ${row.full_name}?`
+    if (!window.confirm(pesan)) return
+
+    setSaving(true)
+    setNotice(null)
+    try {
+      const res = await fetch(`/api/admin/users/${row.id}`, { method: 'DELETE' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Gagal menghapus akun.')
+      setNotice({
+        type: 'success',
+        message: `Akun ${row.full_name} berhasil dihapus.`,
+      })
+      await load()
+    } catch (error) {
+      setNotice({
+        type: 'error',
+        message: error instanceof Error ? error.message : 'Gagal menghapus akun.',
+      })
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-900">Pengguna & Hak Akses</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Tambah dan ubah pengguna (admin, pengurus, anggota), atur peran, serta ganti password.
+            {role === 'admin'
+              ? 'Tambah dan ubah pengguna (admin, pengurus, anggota), atur peran, serta ganti password.'
+              : 'Kelola akun anggota: tambah, ubah data, ganti password, dan hapus akun. Akun admin/pengurus hanya dikelola admin.'}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -241,7 +277,7 @@ export default function UserManager() {
           </div>
           <button type="button" className="btn-primary" onClick={openCreate}>
             <Plus size={16} />
-            Tambah Pengguna
+            {role === 'admin' ? 'Tambah Pengguna' : 'Tambah Anggota'}
           </button>
         </div>
       </div>
@@ -308,6 +344,15 @@ export default function UserManager() {
                       >
                         <KeyRound size={16} />
                       </button>
+                      <button
+                        type="button"
+                        className="rounded-lg p-2 text-slate-500 hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
+                        title="Hapus akun"
+                        disabled={saving}
+                        onClick={() => hapus(row)}
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -319,7 +364,9 @@ export default function UserManager() {
 
       <p className="flex items-center gap-2 text-xs text-slate-500">
         <ShieldCheck size={14} />
-        Peran admin memiliki akses penuh, pengurus mengelola data, anggota melihat informasi.
+        {role === 'admin'
+          ? 'Peran admin memiliki akses penuh, pengurus mengelola data, anggota melihat informasi.'
+          : 'Pengurus hanya mengelola akun anggota. Akun admin dan pengurus tidak bisa ditambah, diubah, atau dihapus.'}
       </p>
 
       {open && (
@@ -327,7 +374,9 @@ export default function UserManager() {
           <form onSubmit={save} className="card w-full max-w-2xl p-6">
             <div className="mb-5 flex items-center justify-between">
               <h3 className="text-lg font-bold text-slate-900">
-                {editing ? `Ubah ${editing.full_name}` : 'Tambah Pengguna'}
+                {editing
+                  ? `Ubah ${editing.full_name}`
+                  : role === 'admin' ? 'Tambah Pengguna' : 'Tambah Anggota'}
               </h3>
               <button
                 type="button"
@@ -369,15 +418,19 @@ export default function UserManager() {
               </label>
               <label className="text-sm">
                 <span className="font-semibold text-slate-700">Peran *</span>
-                <select
-                  className="input mt-1"
-                  value={form.role}
-                  onChange={(e) => ubah('role', e.target.value as Role)}
-                >
-                  <option value="anggota">Anggota</option>
-                  <option value="pengurus">Pengurus</option>
-                  <option value="admin">Admin</option>
-                </select>
+                {role === 'admin' ? (
+                  <select
+                    className="input mt-1"
+                    value={form.role}
+                    onChange={(e) => ubah('role', e.target.value as Role)}
+                  >
+                    <option value="anggota">Anggota</option>
+                    <option value="pengurus">Pengurus</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                ) : (
+                  <input className="input mt-1 bg-slate-50" value="Anggota" readOnly />
+                )}
               </label>
               <label className="text-sm">
                 <span className="font-semibold text-slate-700">

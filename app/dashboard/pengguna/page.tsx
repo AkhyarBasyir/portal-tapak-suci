@@ -44,11 +44,16 @@ export default async function PenggunaPage({
 }) {
   const session = await getSessionProfile()
   if (!session) redirect('/login?next=%2Fdashboard%2Fpengguna')
-  if (session.profile.role !== 'admin') redirect('/dashboard')
+  if (session.profile.role !== 'admin' && session.profile.role !== 'pengurus') {
+    redirect('/dashboard')
+  }
 
   const params = await searchParams
   const rawTab = Array.isArray(params.tab) ? params.tab[0] : params.tab
   const active = TABS.find((item) => item.key === rawTab) ?? TABS[0]
+  const deskripsiUtama = session.profile.role === 'admin'
+    ? 'Tambah, ubah, atur peran, ganti password, dan hapus akun pengguna.'
+    : 'Tambah, ubah, ganti password, dan hapus akun anggota saja.'
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -61,13 +66,15 @@ export default async function PenggunaPage({
           </div>
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-amber-300">
-              Pengelolaan Admin
+              Pengelolaan Akses
             </p>
             <h1 className="mt-1 text-2xl font-extrabold tracking-tight sm:text-3xl">
               Pengguna
             </h1>
             <p className="mt-1 text-sm text-brand-100">
-              Satu halaman untuk akun pengguna dan data anggota.
+              {session.profile.role === 'admin'
+                ? 'Satu halaman untuk akun pengguna dan data anggota.'
+                : 'Kelola akun anggota dan data anggota tanpa keluar dari dashboard.'}
             </p>
           </div>
         </div>
@@ -98,12 +105,14 @@ export default async function PenggunaPage({
       <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-5 sm:p-6">
         <div>
           <h2 className="text-lg font-bold text-slate-900">{active.label}</h2>
-          <p className="mt-1 text-sm text-slate-500">{active.description}</p>
+          <p className="mt-1 text-sm text-slate-500">
+            {active.key === 'utama' ? deskripsiUtama : active.description}
+          </p>
         </div>
         {active.configKey ? (
           <CrudManager key={active.configKey} configKey={active.configKey} role={session.profile.role} />
         ) : (
-          <UserManager />
+          <UserManager role={session.profile.role} />
         )}
       </section>
     </div>

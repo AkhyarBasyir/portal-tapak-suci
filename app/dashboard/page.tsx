@@ -70,7 +70,7 @@ export default async function DashboardPage() {
       label: 'Anggota',
       value: stats.anggota ?? 0,
       icon: Users,
-      href: role === 'admin' ? '/dashboard/pengguna?tab=anggota' : '/dashboard/anggota',
+      href: '/dashboard/pengguna?tab=anggota',
     },
     { label: 'Kegiatan', value: stats.kegiatan ?? 0, icon: CalendarDays, href: '/dashboard/beranda_konten?tab=kegiatan' },
     {

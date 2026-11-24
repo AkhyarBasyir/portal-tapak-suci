@@ -336,7 +336,12 @@ alter table public.iuran enable row level security;
 -- profiles: hanya pengguna login yang bisa melihat; admin yang bisa mengubah peran
 drop policy if exists profiles_select on public.profiles;
 create policy profiles_select on public.profiles
-  for select to authenticated using (true);
+  for select to authenticated
+  using (
+    id = auth.uid()
+    or public.is_admin()
+    or (public.is_pengurus() and role = 'anggota')
+  );
 
 drop policy if exists profiles_insert on public.profiles;
 create policy profiles_insert on public.profiles
@@ -347,6 +352,37 @@ create policy profiles_update on public.profiles
   for update to authenticated
   using (id = auth.uid() or public.is_admin())
   with check (id = auth.uid() or public.is_admin());
+
+-- Peran hanya bisa diubah admin (atau API service_role milik portal).
+create or replace function public.jaga_peran_profil()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if tg_op = 'INSERT'
+     and new.role <> 'anggota'
+     and auth.role() <> 'service_role'
+     and not public.is_admin() then
+    raise exception 'Hanya admin yang bisa membuat akun bukan anggota';
+  end if;
+
+  if tg_op = 'UPDATE'
+     and new.role is distinct from old.role
+     and auth.role() <> 'service_role'
+     and not public.is_admin() then
+    raise exception 'Hanya admin yang bisa mengubah peran pengguna';
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists jaga_peran_profil on public.profiles;
+create trigger jaga_peran_profil
+before insert or update on public.profiles
+for each row execute function public.jaga_peran_profil();
 
 -- anggota: publik melihat yang Aktif, pengurus mengelola semua
 drop policy if exists anggota_select on public.anggota;

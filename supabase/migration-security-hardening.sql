@@ -26,11 +26,16 @@ create trigger jaga_penerima_program
 before update on public.program_khusus_penerima
 for each row execute function public.jaga_penerima_program();
 
--- 2) Anggota hanya melihat profilnya sendiri; admin tetap melihat semua.
+-- 2) Anggota hanya melihat profilnya sendiri; pengurus melihat profil anggota;
+--    admin tetap melihat semua.
 drop policy if exists profiles_select on public.profiles;
 create policy profiles_select on public.profiles
   for select to authenticated
-  using (id = auth.uid() or public.is_admin());
+  using (
+    id = auth.uid()
+    or public.is_admin()
+    or (public.is_pengurus() and role = 'anggota')
+  );
 
 -- 3) Resolver username->email tidak lagi bisa dipanggil publik.
 --    Login sekarang memakai /api/auth/resolve-email (service role).
@@ -82,7 +87,39 @@ create policy media_storage_delete on storage.objects
   for delete to authenticated
   using (bucket_id = 'media' and owner = auth.uid());
 
--- 6) Iuran: anggota hanya melihat tagihannya sendiri; pengurus/admin tetap melihat semua.
+-- 6) Peran profil hanya bisa diubah admin (atau API service_role portal).
+--    Menutup celah pengurus/anggota menaikkan peran lewat Supabase client langsung.
+create or replace function public.jaga_peran_profil()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if tg_op = 'INSERT'
+     and new.role <> 'anggota'
+     and auth.role() <> 'service_role'
+     and not public.is_admin() then
+    raise exception 'Hanya admin yang bisa membuat akun bukan anggota';
+  end if;
+
+  if tg_op = 'UPDATE'
+     and new.role is distinct from old.role
+     and auth.role() <> 'service_role'
+     and not public.is_admin() then
+    raise exception 'Hanya admin yang bisa mengubah peran pengguna';
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists jaga_peran_profil on public.profiles;
+create trigger jaga_peran_profil
+before insert or update on public.profiles
+for each row execute function public.jaga_peran_profil();
+
+-- 7) Iuran: anggota hanya melihat tagihannya sendiri; pengurus/admin tetap melihat semua.
 --    Tautan memakai email yang sama di profiles dan anggota (sama seperti saat admin
 --    membuat akun dari menu Pengguna).
 drop policy if exists iuran_select on public.iuran;

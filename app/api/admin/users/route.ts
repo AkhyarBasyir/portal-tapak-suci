@@ -1,16 +1,17 @@
 import { randomUUID } from 'node:crypto'
 import { safeError } from '@/lib/api-error'
-import { getSessionProfile } from '@/lib/auth'
+import { canManageAccount, getSessionProfile } from '@/lib/auth'
 import { ROLES } from '@/lib/constants'
 import { createAdminClient } from '@/lib/supabase/admin'
+import type { Role } from '@/lib/types'
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
   const session = await getSessionProfile()
   if (!session) return Response.json({ error: 'Belum login.' }, { status: 401 })
-  if (session.profile.role !== 'admin') {
-    return Response.json({ error: 'Hanya admin yang bisa menambah akun.' }, { status: 403 })
+  if (session.profile.role !== 'admin' && session.profile.role !== 'pengurus') {
+    return Response.json({ error: 'Hanya admin dan pengurus yang bisa menambah akun.' }, { status: 403 })
   }
 
   let body: Record<string, any>
@@ -24,8 +25,9 @@ export async function POST(request: Request) {
   const password = String(body.password ?? '')
   const nama = String(body.nama ?? '').trim()
   const username = String(body.username ?? '').trim().toLowerCase()
-  const role = String(body.role ?? 'anggota')
-  const buatAnggota = body.buat_anggota !== false
+  let role = String(body.role ?? 'anggota')
+  // Pengurus sel membuat akun anggota dan data anggotanya.
+  const buatAnggota = session.profile.role === 'pengurus' || body.buat_anggota !== false
   // Suffix UUID menghindari tabrakan NIP bila dua akun dibuat bersamaan.
   const nip = String(body.nip ?? '').trim()
     || `TS-${new Date().getFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`
@@ -46,6 +48,10 @@ export async function POST(request: Request) {
   if (!(ROLES as readonly string[]).includes(role)) {
     return Response.json({ error: 'Peran tidak dikenal.' }, { status: 400 })
   }
+  if (!canManageAccount(session.profile.role, role as Role)) {
+    return Response.json({ error: 'Pengurus hanya bisa menambah akun anggota.' }, { status: 403 })
+  }
+  if (session.profile.role === 'pengurus') role = 'anggota'
 
   let userId: string | null = null
 

@@ -35,7 +35,7 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 - **Program Saya** (`/dashboard/program-saya`) untuk anggota: lihat program latihan yang dibagikan admin dan program khusus yang ditujukan ke akun sendiri, lengkap dengan penanda sudah dibaca; satu-satunya tempat anggota melihat program latihan
 - **Program Latihan publik dinonaktifkan**: tautan lama `/program-latihan` otomatis mengarahkan ke login, lalu ke `/dashboard/program-latihan` untuk admin/pengurus atau `/dashboard/program-saya` untuk anggota
 - **Iuran Saya** (`/dashboard/iuran-saya`) untuk anggota: ringkasan tagihan belum dibayar, total tanggungan, yang sudah lunas, dan riwayat iuran milik sendiri
-- **Pengguna** (`/dashboard/pengguna`, khusus admin): satu halaman bertab untuk **Akun Pengguna** (tambah/ubah akun, atur peran, ganti password) dan **Data Anggota**; menu Anggota terpisah tidak tampil untuk admin
+- **Pengguna** (`/dashboard/pengguna`, admin & pengurus): satu halaman bertab untuk **Akun Pengguna** dan **Data Anggota**. Admin mengelola semua peran; pengurus hanya melihat dan mengelola akun anggota (tambah, hapus, ubah data, ganti password). Akun admin/pengurus tidak bisa ditambah, diubah, atau dihapus oleh pengurus. Link lama `/dashboard/anggota` otomatis diarahkan ke tab Data Anggota
 - **Konten Beranda** (`/dashboard/beranda_konten`) untuk pengurus: satu halaman bertab untuk **Teks Beranda**, **Kegiatan**, **Berita**, **Prestasi**, dan **Dokumen & Galeri**; link lama otomatis diarahkan ke tab yang sesuai
 - **Kelola Program Latihan** (`/dashboard/program-latihan`): form lengkap untuk program umum dan khusus, pilih hari/bulan, rentang tanggal, jam, target, kuota, upload gambar, serta kirim ke semua anggota atau beberapa akun tertentu
 - **Keuangan** (`/dashboard/keuangan`) untuk pengurus: satu halaman bertab untuk **Transaksi Kas** (bukti transaksi di bucket privat) dan **Iuran Anggota**; link lama otomatis diarahkan ke tab yang sesuai
@@ -55,7 +55,7 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 | Dokumen & galeri | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat |
 | Keuangan | Tambah/Ubah/Hapus | Tambah/Ubah | Lihat | Tidak bisa lihat |
 | Iuran | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat tagihan sendiri | Tidak bisa lihat |
-| Pengguna | Tambah/Ubah akun & ganti password | Lihat profil | Ubah profil sendiri | Tidak bisa lihat |
+| Pengguna | Kelola semua peran: tambah/ubah/hapus akun & ganti password | Hanya akun anggota: tambah/ubah/hapus akun & ganti password | Ubah profil sendiri | Tidak bisa lihat |
 | Raport atlet | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat raport sendiri yang Terbit/Arsip | Tidak bisa lihat |
 
 Aturan di atas tidak hanya ada di tampilan, tetapi juga diterapkan di **Row Level Security (RLS)** Supabase dan trigger database, sehingga data tetap aman walaupun ada permintaan langsung ke API.

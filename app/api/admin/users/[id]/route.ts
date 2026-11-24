@@ -1,8 +1,9 @@
 import { randomUUID } from 'node:crypto'
 import { safeError } from '@/lib/api-error'
-import { getSessionProfile } from '@/lib/auth'
+import { canManageAccount, getSessionProfile } from '@/lib/auth'
 import { ROLES } from '@/lib/constants'
 import { createAdminClient } from '@/lib/supabase/admin'
+import type { Role } from '@/lib/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,8 +13,8 @@ export async function PATCH(
 ) {
   const session = await getSessionProfile()
   if (!session) return Response.json({ error: 'Belum login.' }, { status: 401 })
-  if (session.profile.role !== 'admin') {
-    return Response.json({ error: 'Hanya admin yang bisa mengubah pengguna.' }, { status: 403 })
+  if (session.profile.role !== 'admin' && session.profile.role !== 'pengurus') {
+    return Response.json({ error: 'Hanya admin dan pengurus yang bisa mengubah pengguna.' }, { status: 403 })
   }
 
   const { id } = await params
@@ -27,7 +28,7 @@ export async function PATCH(
   const nama = String(body.full_name ?? '').trim()
   const username = String(body.username ?? '').trim().toLowerCase()
   const email = String(body.email ?? '').trim().toLowerCase()
-  const role = String(body.role ?? 'anggota')
+  let role = String(body.role ?? 'anggota')
   const jabatan = String(body.jabatan ?? '').trim()
   const telepon = String(body.telepon ?? '').trim()
   const password = String(body.password ?? '')
@@ -61,8 +62,22 @@ export async function PATCH(
       .eq('id', id)
       .maybeSingle()
 
+    if (!targetProfile?.role) {
+      return Response.json({ error: 'Profil pengguna tidak ditemukan.' }, { status: 404 })
+    }
+    const targetRole = targetProfile.role as Role
+
+    // Pengurus hanya boleh menyentuh akun anggota, tidak boleh admin/pengurus.
+    if (!canManageAccount(session.profile.role, targetRole)) {
+      return Response.json({ error: 'Pengurus hanya bisa mengubah akun anggota.' }, { status: 403 })
+    }
+    if (session.profile.role === 'pengurus' && role !== 'anggota') {
+      return Response.json({ error: 'Pengurus tidak bisa mengubah peran akun.' }, { status: 403 })
+    }
+    if (session.profile.role === 'pengurus') role = 'anggota'
+
     // Jangan biarkan admin terakhir menurunkan dirinya sendiri.
-    if (targetProfile?.role === 'admin' && role !== 'admin' && id === session.user.id) {
+    if (targetRole === 'admin' && role !== 'admin' && id === session.user.id) {
       const { count } = await admin
         .from('profiles')
         .select('id', { count: 'exact', head: true })
@@ -141,6 +156,68 @@ export async function PATCH(
   } catch (error) {
     return Response.json(
       { error: safeError(error, 'Gagal mengubah pengguna.') },
+      { status: 500 },
+    )
+  }
+}
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const session = await getSessionProfile()
+  if (!session) return Response.json({ error: 'Belum login.' }, { status: 401 })
+  if (session.profile.role !== 'admin' && session.profile.role !== 'pengurus') {
+    return Response.json({ error: 'Hanya admin dan pengurus yang bisa menghapus akun.' }, { status: 403 })
+  }
+
+  const { id } = await params
+
+  try {
+    const admin = createAdminClient()
+
+    const { data: targetProfile } = await admin
+      .from('profiles')
+      .select('role, email')
+      .eq('id', id)
+      .maybeSingle()
+
+    if (!targetProfile?.role) {
+      return Response.json({ error: 'Pengguna tidak ditemukan.' }, { status: 404 })
+    }
+
+    const targetRole = targetProfile.role as Role
+    if (!canManageAccount(session.profile.role, targetRole)) {
+      return Response.json({ error: 'Pengurus hanya bisa menghapus akun anggota.' }, { status: 403 })
+    }
+
+    if (targetRole === 'admin') {
+      const { count } = await admin
+        .from('profiles')
+        .select('id', { count: 'exact', head: true })
+        .eq('role', 'admin')
+      if ((count ?? 0) <= 1) {
+        return Response.json(
+          { error: 'Tidak bisa menghapus satu-satunya admin aktif.' },
+          { status: 400 },
+        )
+      }
+    }
+
+    const { error } = await admin.auth.admin.deleteUser(id)
+    if (error) {
+      return Response.json({ error: safeError(error, 'Akun gagal dihapus.') }, { status: 400 })
+    }
+
+    // Hapus data anggota yang tertaut agar tidak menjadi data yatim.
+    if (targetRole === 'anggota' && targetProfile.email) {
+      await admin.from('anggota').delete().eq('email', String(targetProfile.email).toLowerCase())
+    }
+
+    return Response.json({ ok: true })
+  } catch (error) {
+    return Response.json(
+      { error: safeError(error, 'Gagal menghapus akun.') },
       { status: 500 },
     )
   }
