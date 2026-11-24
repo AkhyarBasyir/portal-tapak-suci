@@ -31,7 +31,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: '/dashboard', label: 'Ringkasan', icon: LayoutDashboard },
-  { href: '/dashboard/ganti-password', label: 'Ganti Password', icon: KeyRound },
+  { href: '/dashboard/ganti-password', label: 'Ganti Password', icon: KeyRound, roles: ['pengurus', 'anggota'] },
   { href: '/dashboard/raport-saya', label: 'Raport Saya', icon: FileText },
   { href: '/dashboard/raport_atlet', label: 'Raport Atlet', icon: FileBarChart2, minRole: 'pengurus' },
   { href: '/dashboard/anggota', label: 'Anggota', icon: Users, minRole: 'pengurus' },

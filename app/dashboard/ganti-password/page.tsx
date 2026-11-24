@@ -11,6 +11,7 @@ export const metadata = {
 export default async function GantiPasswordPage() {
   const session = await getSessionProfile()
   if (!session) redirect('/login')
+  if (session.profile.role === 'admin') redirect('/dashboard/pengguna')
 
   return (
     <div>
