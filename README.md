@@ -43,7 +43,7 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 - **Pengguna** (khusus admin): tambah & ubah akun (admin/pengurus/anggota), atur peran, dan ganti password pengguna lain—semuanya dalam satu menu
 - **Ganti Password**: anggota dan pengurus dapat mengubah password sendiri dari menu tersendiri; admin melakukannya lewat menu **Pengguna**
 - **Raport Saya** (`/dashboard/raport-saya`): raport atlet dengan grafik radar dan garis, pengukuran fisik (tinggi, berat, lingkar tubuh, denyut nadi), performa (power, kecepatan, VO2 max, teknik, strategi, mental), prestasi, penilaian kepribadian 12 aspek, tombol **Simpan PDF** (print) dan **Unduh Raport** (HTML)
-- CRUD raport untuk pengurus: **Raport Atlet**, **Pengukuran Fisik**, **Performa Atlet**, **Prestasi Atlet**, dan **Kepribadian**
+- **Raport Atlet** (`/dashboard/raport_atlet`) untuk pengurus: satu halaman bertab untuk **Data Raport**, **Pengukuran Fisik**, **Performa Atlet**, **Prestasi Atlet**, dan **Kepribadian**; link lama otomatis diarahkan ke tab yang sesuai
 - Kelola **Pengguna & hak akses** (khusus admin), termasuk pembuatan akun baru dengan peran admin/pengurus/anggota dan penggantian password
 
 ### Hak akses
