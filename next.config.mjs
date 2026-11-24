@@ -57,6 +57,31 @@ const nextConfig = {
         destination: '/dashboard/beranda_konten?tab=media',
         permanent: false,
       },
+      {
+        source: '/dashboard/raport-saya',
+        destination: '/dashboard/raport_atlet?tab=saya',
+        permanent: false,
+      },
+      {
+        source: '/dashboard/iuran',
+        destination: '/dashboard/keuangan?tab=iuran',
+        permanent: false,
+      },
+      {
+        source: '/dashboard/halaman-sanggar',
+        destination: '/dashboard/halaman_sanggar',
+        permanent: false,
+      },
+      {
+        source: '/dashboard/sanggar_fokus',
+        destination: '/dashboard/halaman_sanggar?tab=fokus',
+        permanent: false,
+      },
+      {
+        source: '/dashboard/sanggar_penampilan',
+        destination: '/dashboard/halaman_sanggar?tab=penampilan',
+        permanent: false,
+      },
     ]
   },
 }

@@ -3,14 +3,11 @@ import { redirect } from 'next/navigation'
 import {
   Dumbbell,
   FileBarChart2,
-  FileText,
   KeyRound,
   LayoutDashboard,
   LayoutTemplate,
   Palette,
-  Receipt,
   Shield,
-  Ticket,
   Users,
   Wallet,
   type LucideIcon,
@@ -32,15 +29,12 @@ interface NavItem {
 const navItems: NavItem[] = [
   { href: '/dashboard', label: 'Ringkasan', icon: LayoutDashboard },
   { href: '/dashboard/ganti-password', label: 'Ganti Password', icon: KeyRound, roles: ['pengurus', 'anggota'] },
-  { href: '/dashboard/raport-saya', label: 'Raport Saya', icon: FileText },
-  { href: '/dashboard/raport_atlet', label: 'Raport Atlet', icon: FileBarChart2, minRole: 'pengurus' },
-  { href: '/dashboard/anggota', label: 'Anggota', icon: Users, minRole: 'pengurus' },
+  { href: '/dashboard/raport_atlet', label: 'Raport Atlet', icon: FileBarChart2 },
+  { href: '/dashboard/anggota', label: 'Anggota', icon: Users, roles: ['pengurus'] },
   { href: '/dashboard/program-latihan', label: 'Program Latihan', icon: Dumbbell, minRole: 'pengurus' },
   { href: '/dashboard/beranda_konten', label: 'Konten Beranda', icon: LayoutTemplate, minRole: 'pengurus' },
-  { href: '/dashboard/sanggar_fokus', label: 'Fokus Sanggar', icon: Palette, minRole: 'pengurus' },
-  { href: '/dashboard/sanggar_penampilan', label: 'Penampilan Sanggar', icon: Ticket, minRole: 'pengurus' },
+  { href: '/dashboard/halaman_sanggar', label: 'Halaman Sanggar', icon: Palette, minRole: 'pengurus' },
   { href: '/dashboard/keuangan', label: 'Keuangan', icon: Wallet, minRole: 'pengurus' },
-  { href: '/dashboard/iuran', label: 'Iuran', icon: Receipt, minRole: 'pengurus' },
   { href: '/dashboard/pengguna', label: 'Pengguna', icon: Shield, minRole: 'admin' },
 ]
 

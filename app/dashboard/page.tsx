@@ -16,23 +16,28 @@ export default async function DashboardPage() {
   const programKhusus = !isManager ? await getProgramKhusus() : []
 
   const cards = [
-    { label: 'Anggota', value: stats.anggota ?? 0, icon: Users, href: '/dashboard/anggota' },
-    { label: 'Kegiatan', value: stats.kegiatan ?? 0, icon: CalendarDays, href: '/dashboard/kegiatan' },
+    {
+      label: 'Anggota',
+      value: stats.anggota ?? 0,
+      icon: Users,
+      href: role === 'admin' ? '/dashboard/pengguna?tab=anggota' : '/dashboard/anggota',
+    },
+    { label: 'Kegiatan', value: stats.kegiatan ?? 0, icon: CalendarDays, href: '/dashboard/beranda_konten?tab=kegiatan' },
     {
       label: 'Program Latihan',
       value: stats.program_latihan ?? 0,
       icon: Dumbbell,
       href: '/dashboard/program-latihan',
     },
-    { label: 'Berita', value: stats.berita ?? 0, icon: Newspaper, href: '/dashboard/berita' },
-    { label: 'Dokumen & Galeri', value: stats.media ?? 0, icon: FileText, href: '/dashboard/media' },
-    { label: 'Iuran', value: stats.iuran ?? 0, icon: Wallet, href: '/dashboard/iuran' },
-    { label: 'Prestasi', value: stats.prestasi ?? 0, icon: Trophy, href: '/dashboard/prestasi' },
+    { label: 'Berita', value: stats.berita ?? 0, icon: Newspaper, href: '/dashboard/beranda_konten?tab=berita' },
+    { label: 'Dokumen & Galeri', value: stats.media ?? 0, icon: FileText, href: '/dashboard/beranda_konten?tab=media' },
+    { label: 'Iuran', value: stats.iuran ?? 0, icon: Wallet, href: '/dashboard/keuangan?tab=iuran' },
+    { label: 'Prestasi', value: stats.prestasi ?? 0, icon: Trophy, href: '/dashboard/beranda_konten?tab=prestasi' },
     {
       label: 'Penampilan Sanggar',
       value: stats.sanggar_penampilan ?? 0,
       icon: Ticket,
-      href: '/dashboard/sanggar_penampilan',
+      href: '/dashboard/halaman_sanggar?tab=penampilan',
     },
   ]
 

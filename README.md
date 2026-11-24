@@ -33,16 +33,13 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 ### Dashboard (setelah login)
 - **Halaman masuk yang elegan dan responsif**: pemilih peran interaktif, tampilkan/sembunyikan kata sandi, peringatan Caps Lock, serta opsi mengingat username (kata sandi tidak pernah disimpan)
 - **Ringkasan** statistik
-- CRUD **Anggota & jabatan**
+- **Pengguna** (`/dashboard/pengguna`, khusus admin): satu halaman bertab untuk **Akun Pengguna** (tambah/ubah akun, atur peran, ganti password) dan **Data Anggota**; menu Anggota terpisah tidak tampil untuk admin
 - **Konten Beranda** (`/dashboard/beranda_konten`) untuk pengurus: satu halaman bertab untuk **Teks Beranda**, **Kegiatan**, **Berita**, **Prestasi**, dan **Dokumen & Galeri**; link lama otomatis diarahkan ke tab yang sesuai
 - **Kelola Program Latihan** (`/dashboard/program-latihan`): form lengkap untuk program umum dan khusus, pilih hari/bulan, rentang tanggal, jam, target, kuota, upload gambar, serta kirim ke semua anggota atau beberapa akun tertentu
-- CRUD **Keuangan & kas** (bukti transaksi di bucket privat)
-- CRUD **Iuran anggota**
-- **Pengguna** (khusus admin): tambah & ubah akun (admin/pengurus/anggota), atur peran, dan ganti password pengguna lain—semuanya dalam satu menu
+- **Keuangan** (`/dashboard/keuangan`) untuk pengurus: satu halaman bertab untuk **Transaksi Kas** (bukti transaksi di bucket privat) dan **Iuran Anggota**; link lama otomatis diarahkan ke tab yang sesuai
+- **Halaman Sanggar** (`/dashboard/halaman_sanggar`) untuk pengurus: satu halaman bertab untuk **Fokus Sanggar** dan **Penampilan Sanggar**, dengan tautan ke halaman publik `/sanggar`
 - **Ganti Password**: anggota dan pengurus dapat mengubah password sendiri dari menu tersendiri; menu ini tidak tampil untuk admin karena admin mengubah password lewat menu **Pengguna**
-- **Raport Saya** (`/dashboard/raport-saya`): raport atlet dengan grafik radar dan garis, pengukuran fisik (tinggi, berat, lingkar tubuh, denyut nadi), performa (power, kecepatan, VO2 max, teknik, strategi, mental), prestasi, penilaian kepribadian 12 aspek, tombol **Simpan PDF** (print) dan **Unduh Raport** (HTML)
-- **Raport Atlet** (`/dashboard/raport_atlet`) untuk pengurus: satu halaman bertab untuk **Data Raport**, **Pengukuran Fisik**, **Performa Atlet**, **Prestasi Atlet**, dan **Kepribadian**; link lama otomatis diarahkan ke tab yang sesuai
-- Kelola **Pengguna & hak akses** (khusus admin), termasuk pembuatan akun baru dengan peran admin/pengurus/anggota dan penggantian password
+- **Raport Atlet** (`/dashboard/raport_atlet`): satu halaman bertab untuk **Raport Saya** (grafik radar/garis, pengukuran fisik, performa, prestasi, kepribadian, **Simpan PDF**, **Unduh Raport**) dan—khusus pengurus/admin—**Data Raport**, **Pengukuran Fisik**, **Performa Atlet**, **Prestasi Atlet**, serta **Kepribadian**; anggota hanya melihat tab Raport Saya
 
 ### Hak akses
 
