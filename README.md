@@ -16,15 +16,14 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 ## Fitur
 
 ### Halaman publik
-- **Beranda cinematic yang dinamis**: hero dengan foto pencak silat, gradasi Nusantara/Jawa/Wayang bermotif mega mendung, animasi, marquee, kartu "Dua Bidang, Satu Semangat", sorotan sanggar, jadwal latihan, prestasi, berita, dan pilihan login
-- Beranda dan halaman program publik hanya menampilkan **program Umum**; program khusus/intensif/pertandingan tidak pernah tampil ke publik
+- **Beranda cinematic yang dinamis**: hero dengan foto pencak silat, gradasi Nusantara/Jawa/Wayang bermotif mega mendung, animasi, marquee, kartu "Dua Bidang, Satu Semangat", sorotan sanggar, agenda & penampilan, prestasi, berita, dan pilihan login
+- **Program latihan tidak ditampilkan di area publik.** Halaman lama `/program-latihan` kini hanya mengalihkan ke login, lalu ke dashboard sesuai peran; tidak ada jadwal, jenis program, atau target yang bisa dilihat tanpa akun
 - **Dua bidang utama**: Prestasi di Gelanggang dan Seni Pertunjukan Pentas, masing-masing punya halaman khusus
 - **Sanggar Seni Budaya Surya Manggala Integra** (`/sanggar`): sendratari, penampilan, tradisi pencak silat, sosiodrama, dan pembinaan akhlak berlandaskan Al-Qur'an dan Sunnah, lengkap dengan jadwal penampilan
 - **Prestasi** (`/prestasi`) dikelompokkan menjadi gelanggang dan seni pertunjukan
-- **Jadwal latihan di beranda** diambil langsung dari `program_latihan`, sehingga perubahan admin langsung tampil
 - Berita & pengumuman + halaman detail per artikel
 - Jadwal kegiatan
-- **Program Latihan**: tab **Umum** (jadwal, macam program, target, filter jenis & pencarian) dan tab **Khusus** (tombol hanya muncul untuk anggota/pengurus/admin yang login; isi hanya untuk anggota yang ditunjuk admin, dengan status sudah dibaca). Beranda dan area publik hanya menampilkan program dengan jenis Umum, tanpa filter sub-jenis.
+- Agenda dan penampilan sanggar di beranda tetap diambil dari data yang dikelola admin/pengurus
 - Profil anggota aktif
 - Galeri foto
 - Arsip dokumen dengan tombol unduh
@@ -33,7 +32,8 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 ### Dashboard (setelah login)
 - **Halaman masuk yang elegan dan responsif**: pemilih peran interaktif, tampilkan/sembunyikan kata sandi, peringatan Caps Lock, serta opsi mengingat username (kata sandi tidak pernah disimpan)
 - **Ringkasan** statistik
-- **Program Saya** (`/dashboard/program-saya`) untuk anggota: lihat program latihan yang dibagikan admin dan program khusus yang ditujukan ke akun sendiri, lengkap dengan penanda sudah dibaca; tautan dashboard tidak lagi keluar ke halaman publik
+- **Program Saya** (`/dashboard/program-saya`) untuk anggota: lihat program latihan yang dibagikan admin dan program khusus yang ditujukan ke akun sendiri, lengkap dengan penanda sudah dibaca; satu-satunya tempat anggota melihat program latihan
+- **Program Latihan publik dinonaktifkan**: tautan lama `/program-latihan` otomatis mengarahkan ke login, lalu ke `/dashboard/program-latihan` untuk admin/pengurus atau `/dashboard/program-saya` untuk anggota
 - **Iuran Saya** (`/dashboard/iuran-saya`) untuk anggota: ringkasan tagihan belum dibayar, total tanggungan, yang sudah lunas, dan riwayat iuran milik sendiri
 - **Pengguna** (`/dashboard/pengguna`, khusus admin): satu halaman bertab untuk **Akun Pengguna** (tambah/ubah akun, atur peran, ganti password) dan **Data Anggota**; menu Anggota terpisah tidak tampil untuk admin
 - **Konten Beranda** (`/dashboard/beranda_konten`) untuk pengurus: satu halaman bertab untuk **Teks Beranda**, **Kegiatan**, **Berita**, **Prestasi**, dan **Dokumen & Galeri**; link lama otomatis diarahkan ke tab yang sesuai
@@ -49,8 +49,8 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 | --- | --- | --- | --- | --- |
 | Anggota | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat yang Aktif |
 | Kegiatan | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat |
-| Program latihan umum | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat |
-| Program latihan khusus | Tambah/Ubah/Hapus | Lihat saja | Lihat yang ditujukan padanya | Tidak bisa lihat |
+| Program latihan umum | Kelola penuh di dashboard | Kelola di dashboard | Lihat di Program Saya | Tidak bisa lihat |
+| Program latihan khusus | Kelola penuh di dashboard | Lihat/kelola terbatas di dashboard | Lihat yang ditujukan padanya di Program Saya | Tidak bisa lihat |
 | Berita | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat yang diterbitkan |
 | Dokumen & galeri | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat |
 | Keuangan | Tambah/Ubah/Hapus | Tambah/Ubah | Lihat | Tidak bisa lihat |

@@ -4,7 +4,6 @@ import { ArrowUpRight, Mail, MapPin, Phone, Quote } from 'lucide-react'
 import { CONTACT_EMAIL } from '@/lib/constants'
 
 const tautan = [
-  { href: '/program-latihan', label: 'Program Latihan' },
   { href: '/prestasi', label: 'Prestasi' },
   { href: '/sanggar', label: 'Sanggar Seni Budaya' },
   { href: '/berita', label: 'Berita' },

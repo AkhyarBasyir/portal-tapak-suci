@@ -8,7 +8,6 @@ import { ArrowRight, ChevronDown, Menu, X } from 'lucide-react'
 
 const nav = [
   { href: '/', label: 'Beranda' },
-  { href: '/program-latihan', label: 'Program Latihan' },
   { href: '/sanggar', label: 'Sanggar' },
   { href: '/prestasi', label: 'Prestasi' },
   { href: '/berita', label: 'Berita' },

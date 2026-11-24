@@ -461,7 +461,7 @@ export default function ProgramAdmin({
             Susun jadwal dan target latihan umum, serta kirim program khusus ke anggota tertentu.
           </p>
         </div>
-        <Link href="/program-latihan" className="btn-outline text-sm" target="_blank">
+        <Link href="/dashboard/program-saya" className="btn-outline text-sm" target="_blank">
           Lihat tampilan anggota <ArrowLeft size={15} className="rotate-180" />
         </Link>
       </div>

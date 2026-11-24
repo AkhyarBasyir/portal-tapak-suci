@@ -1,43 +1,15 @@
-import ProgramLatihanView from '@/components/program-latihan/program-view'
-import { getSessionProfile } from '@/lib/auth'
-import {
-  getPenerimaSaya,
-  getProgramKhusus,
-  getProgramLatihanUmum,
-} from '@/lib/data'
+import { redirect } from 'next/navigation'
+import { canManage, getSessionProfile } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata = {
-  title: 'Program Latihan',
-  description:
-    'Jadwal, macam program, dan target latihan Tapak Suci serta program khusus untuk anggota.',
-}
-
 export default async function ProgramLatihanPage() {
-  const [programUmum, session] = await Promise.all([
-    getProgramLatihanUmum(true),
-    getSessionProfile(),
-  ])
+  const session = await getSessionProfile()
+  if (!session) redirect('/login?next=%2Fdashboard')
 
-  // Program khusus dan daftar penerimanya hanya diambil untuk anggota/pengurus/admin yang login.
-  const programKhusus = session ? await getProgramKhusus() : []
-  const penerima = session ? await getPenerimaSaya(session.profile.id) : []
+  const tujuan = canManage(session.profile.role, 'pengurus')
+    ? '/dashboard/program-latihan'
+    : '/dashboard/program-saya'
 
-  return (
-    <ProgramLatihanView
-      umum={programUmum}
-      khusus={programKhusus}
-      penerima={penerima}
-      profile={
-        session
-          ? {
-              id: session.profile.id,
-              full_name: session.profile.full_name,
-              role: session.profile.role,
-            }
-          : null
-      }
-    />
-  )
+  redirect(tujuan)
 }

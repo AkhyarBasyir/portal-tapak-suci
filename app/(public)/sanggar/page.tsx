@@ -203,9 +203,6 @@ export default async function SanggarPage() {
               Jadwal penampilan dikelola oleh pengurus dan dapat berubah sewaktu-waktu.
             </p>
           </div>
-          <Link href="/program-latihan" className="inline-flex items-center gap-2 text-sm font-bold text-brand-700 hover:underline">
-            Lihat program latihan <ArrowRight size={16} />
-          </Link>
         </div>
 
         {penampilan.length === 0 && (

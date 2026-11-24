@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Award, Medal, Sparkles, Trophy } from 'lucide-react'
+import { Award, Medal, Sparkles, Trophy } from 'lucide-react'
 import { getPrestasi } from '@/lib/data'
 import { formatDate } from '@/lib/utils'
 
@@ -134,9 +134,6 @@ export default async function PrestasiPage() {
             maupun di panggung seni pertunjukan pentas.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/program-latihan" className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-brand-800 transition hover:-translate-y-1">
-              Program latihan <ArrowRight size={16} />
-            </Link>
             <Link href="/sanggar" className="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 py-3 text-sm font-bold backdrop-blur transition hover:bg-white/10">
               <Sparkles size={16} /> Sanggar seni
             </Link>

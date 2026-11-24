@@ -6,7 +6,6 @@ import {
   ArrowUpRight,
   BookOpen,
   CalendarDays,
-  Clock,
   Heart,
   Mail,
   MapPin,
@@ -27,7 +26,6 @@ import {
   getSanggarFokus,
   getSanggarPenampilan,
   getUpcomingKegiatan,
-  getProgramLatihanUmum,
 } from '@/lib/data'
 import { formatDate } from '@/lib/utils'
 
@@ -36,7 +34,7 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'Portal Informasi Tapak Suci',
   description:
-    'Portal resmi Tapak Suci Putera Muhammadiyah dan Sanggar Surya Manggala Integra: prestasi di gelanggang, seni pertunjukan pentas, jadwal latihan, dan berita organisasi.',
+    'Portal resmi Tapak Suci Putera Muhammadiyah dan Sanggar Surya Manggala Integra: prestasi di gelanggang, seni pertunjukan pentas, kegiatan, dan berita organisasi.',
 }
 
 type Baris = Record<string, any>
@@ -144,28 +142,18 @@ function nilai(
   return value ? String(value) : fallback
 }
 
-function tanggalPendek(value: unknown) {
-  const date = new Date(String(value ?? ''))
-  if (Number.isNaN(date.getTime())) return { hari: '-', bulan: '-' }
-  return {
-    hari: String(date.getDate()).padStart(2, '0'),
-    bulan: date.toLocaleDateString('id-ID', { month: 'short' }).replace('.', ''),
-  }
-}
-
 function jamSingkat(value: unknown) {
   if (!value) return ''
   return String(value).slice(0, 5)
 }
 
 export default async function HomePage() {
-  const [konten, berita, kegiatan, stats, program, fokusDb, penampilan, prestasiDb] =
+  const [konten, berita, kegiatan, stats, fokusDb, penampilan, prestasiDb] =
     await Promise.all([
       getBerandaKonten(),
       getRecentBerita(3),
       getUpcomingKegiatan(3),
       getDashboardStats(),
-      getProgramLatihanUmum(true),
       getSanggarFokus(),
       getSanggarPenampilan(4),
       getPrestasi(6),
@@ -178,7 +166,6 @@ export default async function HomePage() {
 
   const fokus = fokusDb.length ? fokusDb : fokusDefault
   const prestasi = prestasiDb.length ? prestasiDb : prestasiDefault
-  const jadwal = program.slice(0, 4)
 
   return (
     <>
@@ -224,10 +211,10 @@ export default async function HomePage() {
 
             <div className="mt-9 flex flex-wrap gap-3">
               <Link
-                href="#jadwal"
+                href="/prestasi"
                 className="group inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-brand-800 shadow-xl shadow-black/20 transition hover:-translate-y-1"
               >
-                Lihat Jadwal Latihan
+                Lihat Prestasi
                 <ArrowRight size={16} className="transition group-hover:translate-x-1" />
               </Link>
               <Link
@@ -450,84 +437,22 @@ export default async function HomePage() {
               <Link href="/sanggar" className="btn-primary inline-flex items-center gap-2">
                 Lihat penampilan sanggar <ArrowRight size={16} />
               </Link>
-              <Link href="#jadwal" className="btn-outline inline-flex items-center gap-2">
-                Jadwal latihan <CalendarDays size={16} />
-              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* JADWAL LATIHAN — dikelola admin */}
-      <section className="showcase-section bg-white" id="jadwal">
-        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <span className="showcase-eyebrow">Dikelola Pengurus</span>
-            <h2 className="showcase-title mt-5">Jadwal Latihan Terbaru</h2>
-            <p className="mt-3 max-w-2xl text-sm text-slate-600">
-              Jadwal ini diperbarui langsung oleh admin/pengurus. Pilih program untuk melihat
-              detail target, instruktur, dan kuota.
-            </p>
-          </div>
-          <Link
-            href="/program-latihan"
-            className="inline-flex shrink-0 items-center gap-2 text-sm font-bold text-brand-700 hover:underline"
-          >
-            Semua program latihan <ArrowRight size={16} />
-          </Link>
+      {/* AGENDA & PENAMPILAN — dikelola admin */}
+      <section className="showcase-section bg-white" id="agenda">
+        <div className="mb-10">
+          <span className="showcase-eyebrow">Dikelola Pengurus</span>
+          <h2 className="showcase-title mt-5">Agenda & Penampilan</h2>
+          <p className="mt-3 max-w-2xl text-sm text-slate-600">
+            Agenda kegiatan dan penampilan sanggar diperbarui langsung oleh admin/pengurus.
+          </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1.5fr_0.8fr]">
-          <div className="grid gap-4 sm:grid-cols-2">
-            {jadwal.length === 0 && (
-              <div className="showcase-card col-span-full p-6 text-sm text-slate-500">
-                Belum ada jadwal latihan aktif. Pengurus dapat menambahkannya di dashboard.
-              </div>
-            )}
-            {jadwal.map((item: Baris) => {
-              const tgl = tanggalPendek(item.tanggal_mulai)
-              return (
-                <Link
-                  key={item.id}
-                  href="/program-latihan"
-                  className="showcase-card group flex gap-4 p-5"
-                >
-                  <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-700 to-brand-900 text-center text-white shadow-lg">
-                    <span>
-                      <span className="block text-xl font-extrabold leading-none">{tgl.hari}</span>
-                      <span className="text-xs font-bold uppercase tracking-wide text-amber-200">
-                        {tgl.bulan}
-                      </span>
-                    </span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="line-clamp-2 font-bold leading-snug text-slate-900 group-hover:text-brand-700">
-                      {item.judul}
-                    </h3>
-                    <div className="mt-3 space-y-1.5 text-xs text-slate-500">
-                      {item.hari && (
-                        <p className="flex items-center gap-1.5">
-                          <CalendarDays size={13} className="text-brand-500" /> {item.hari}
-                        </p>
-                      )}
-                      {(item.jam_mulai || item.jam_selesai) && (
-                        <p className="flex items-center gap-1.5">
-                          <Clock size={13} className="text-brand-500" />
-                          {jamSingkat(item.jam_mulai)}–{jamSingkat(item.jam_selesai)} WIB
-                        </p>
-                      )}
-                      {item.lokasi && (
-                        <p className="flex items-center gap-1.5">
-                          <MapPin size={13} className="text-brand-500" /> {item.lokasi}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-
+        <div className="grid gap-6">
           <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#2a0b0b] via-brand-900 to-[#160707] p-7 text-white">
             <div className="stage-grid absolute inset-0 opacity-60" />
             <div className="noise-overlay" />

@@ -329,7 +329,7 @@ export default function ProgramLatihanView({ umum, khusus, penerima, profile, mo
                   </p>
                 </div>
                 <Link
-                  href="/login?next=/program-latihan"
+                  href="/login?next=%2Fdashboard%2Fprogram-saya"
                   className="btn-primary"
                 >
                   Masuk ke akun Anda <ArrowRight size={16} />
