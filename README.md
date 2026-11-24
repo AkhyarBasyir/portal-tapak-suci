@@ -33,6 +33,8 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 ### Dashboard (setelah login)
 - **Halaman masuk yang elegan dan responsif**: pemilih peran interaktif, tampilkan/sembunyikan kata sandi, peringatan Caps Lock, serta opsi mengingat username (kata sandi tidak pernah disimpan)
 - **Ringkasan** statistik
+- **Program Saya** (`/dashboard/program-saya`) untuk anggota: lihat program latihan yang dibagikan admin dan program khusus yang ditujukan ke akun sendiri, lengkap dengan penanda sudah dibaca; tautan dashboard tidak lagi keluar ke halaman publik
+- **Iuran Saya** (`/dashboard/iuran-saya`) untuk anggota: ringkasan tagihan belum dibayar, total tanggungan, yang sudah lunas, dan riwayat iuran milik sendiri
 - **Pengguna** (`/dashboard/pengguna`, khusus admin): satu halaman bertab untuk **Akun Pengguna** (tambah/ubah akun, atur peran, ganti password) dan **Data Anggota**; menu Anggota terpisah tidak tampil untuk admin
 - **Konten Beranda** (`/dashboard/beranda_konten`) untuk pengurus: satu halaman bertab untuk **Teks Beranda**, **Kegiatan**, **Berita**, **Prestasi**, dan **Dokumen & Galeri**; link lama otomatis diarahkan ke tab yang sesuai
 - **Kelola Program Latihan** (`/dashboard/program-latihan`): form lengkap untuk program umum dan khusus, pilih hari/bulan, rentang tanggal, jam, target, kuota, upload gambar, serta kirim ke semua anggota atau beberapa akun tertentu
@@ -52,7 +54,7 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 | Berita | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat yang diterbitkan |
 | Dokumen & galeri | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Lihat |
 | Keuangan | Tambah/Ubah/Hapus | Tambah/Ubah | Lihat | Tidak bisa lihat |
-| Iuran | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat | Tidak bisa lihat |
+| Iuran | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat tagihan sendiri | Tidak bisa lihat |
 | Pengguna | Tambah/Ubah akun & ganti password | Lihat profil | Ubah profil sendiri | Tidak bisa lihat |
 | Raport atlet | Tambah/Ubah/Hapus | Tambah/Ubah/Hapus | Lihat raport sendiri yang Terbit/Arsip | Tidak bisa lihat |
 

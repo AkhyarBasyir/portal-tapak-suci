@@ -433,7 +433,17 @@ create policy keuangan_delete on public.keuangan
 
 drop policy if exists iuran_select on public.iuran;
 create policy iuran_select on public.iuran
-  for select to authenticated using (true);
+  for select to authenticated
+  using (
+    public.is_pengurus()
+    or exists (
+      select 1
+      from public.anggota a
+      join public.profiles p on lower(p.email) = lower(a.email)
+      where a.id = iuran.anggota_id
+        and p.id = auth.uid()
+    )
+  );
 
 drop policy if exists iuran_insert on public.iuran;
 create policy iuran_insert on public.iuran

@@ -153,6 +153,37 @@ export async function getPenerimaSaya(profilId: string) {
   )
 }
 
+/**
+ * Data anggota yang tertaut dengan akun yang sedang login.
+ * Saat membuat akun, admin menyimpan email yang sama di profiles dan anggota.
+ */
+export async function getAnggotaSaya(email: string | null | undefined) {
+  if (!email) return null
+  const supabase = await getClient()
+  if (!supabase) return null
+  const rows = await safeFetch<any>(
+    supabase
+      .from('anggota')
+      .select('*')
+      .eq('email', email.trim().toLowerCase())
+      .limit(1) as any,
+  )
+  return rows[0] ?? null
+}
+
+/** Tagihan iuran milik satu data anggota. */
+export async function getIuranSaya(anggotaId: string) {
+  const supabase = await getClient()
+  if (!supabase) return []
+  return safeFetch<any>(
+    supabase
+      .from('iuran')
+      .select('*')
+      .eq('anggota_id', anggotaId)
+      .order('created_at', { ascending: false }) as any,
+  )
+}
+
 export async function getCalonPenerima() {
   const supabase = await getClient()
   if (!supabase) return []

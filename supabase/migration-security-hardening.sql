@@ -81,3 +81,20 @@ create policy media_storage_update on storage.objects
 create policy media_storage_delete on storage.objects
   for delete to authenticated
   using (bucket_id = 'media' and owner = auth.uid());
+
+-- 6) Iuran: anggota hanya melihat tagihannya sendiri; pengurus/admin tetap melihat semua.
+--    Tautan memakai email yang sama di profiles dan anggota (sama seperti saat admin
+--    membuat akun dari menu Pengguna).
+drop policy if exists iuran_select on public.iuran;
+create policy iuran_select on public.iuran
+  for select to authenticated
+  using (
+    public.is_pengurus()
+    or exists (
+      select 1
+      from public.anggota a
+      join public.profiles p on lower(p.email) = lower(a.email)
+      where a.id = iuran.anggota_id
+        and p.id = auth.uid()
+    )
+  );

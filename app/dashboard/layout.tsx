@@ -30,6 +30,8 @@ const navItems: NavItem[] = [
   { href: '/dashboard', label: 'Ringkasan', icon: LayoutDashboard },
   { href: '/dashboard/ganti-password', label: 'Ganti Password', icon: KeyRound, roles: ['pengurus', 'anggota'] },
   { href: '/dashboard/raport_atlet', label: 'Raport Atlet', icon: FileBarChart2 },
+  { href: '/dashboard/program-saya', label: 'Program Saya', icon: Dumbbell, roles: ['anggota'] },
+  { href: '/dashboard/iuran-saya', label: 'Iuran Saya', icon: Wallet, roles: ['anggota'] },
   { href: '/dashboard/anggota', label: 'Anggota', icon: Users, roles: ['pengurus'] },
   { href: '/dashboard/program-latihan', label: 'Program Latihan', icon: Dumbbell, minRole: 'pengurus' },
   { href: '/dashboard/beranda_konten', label: 'Konten Beranda', icon: LayoutTemplate, minRole: 'pengurus' },

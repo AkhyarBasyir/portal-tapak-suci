@@ -35,6 +35,7 @@ interface Props {
   khusus: ProgramKhusus[]
   penerima: PenerimaProgram[]
   profile: { id: string; full_name: string; role: Role } | null
+  mode?: 'dashboard'
 }
 
 type Tab = 'umum' | 'khusus'
@@ -60,7 +61,7 @@ function Detail({
   )
 }
 
-export default function ProgramLatihanView({ umum, khusus, penerima, profile }: Props) {
+export default function ProgramLatihanView({ umum, khusus, penerima, profile, mode }: Props) {
   const router = useRouter()
   const [tab, setTab] = useState<Tab>('umum')
   const [jenis, setJenis] = useState('Semua')
@@ -113,8 +114,9 @@ export default function ProgramLatihanView({ umum, khusus, penerima, profile }: 
   }
 
   return (
-    <div className="bg-slate-50">
+    <div className={mode === 'dashboard' ? '' : 'bg-slate-50'}>
       {/* Hero */}
+      {mode !== 'dashboard' && (
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800 text-white">
         <div className="pointer-events-none absolute -right-24 -top-32 h-96 w-96 rounded-full border-[40px] border-white/5" />
         <div className="pointer-events-none absolute -bottom-40 left-1/3 h-80 w-80 rounded-full bg-white/5" />
@@ -151,8 +153,9 @@ export default function ProgramLatihanView({ umum, khusus, penerima, profile }: 
           </div>
         </div>
       </section>
+      )}
 
-      <div className="container-page py-10">
+      <div className={mode === 'dashboard' ? '' : 'container-page py-10'}>
         {/* Tab */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="inline-flex rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
