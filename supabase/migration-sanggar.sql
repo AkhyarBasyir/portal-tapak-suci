@@ -133,7 +133,7 @@ create policy prestasi_delete on public.prestasi for delete to authenticated usi
 
 -- Konten beranda
 insert into public.beranda_konten (kunci, judul, subtitle, deskripsi, label_link, link_url, urutan) values
-('hero_kicker', 'TAPAK SUCI × SURYA MANGGALA INTEGRA', null, null, null, null, 1),
+('hero_kicker', 'TAPAK SUCI × MUTU-MUDA', null, null, null, null, 1),
 ('hero_judul', 'Bela diri berprestasi. Seni yang berakhlak.', null, null, null, null, 2),
 ('hero_deskripsi', 'Prestasi dan seni dalam satu wadah', null, 'Dua semangat dalam satu wadah: prestasi di gelanggang dan keindahan pertunjukan pentas, berpijak pada Al-Qur''an dan Sunnah.', null, null, 3),
 ('bidang_judul', 'Dua Bidang, Satu Semangat', null, 'Prestasi di gelanggang dan seni pertunjukan pentas saling menguatkan dalam pembinaan anggota Tapak Suci.', null, null, 4),

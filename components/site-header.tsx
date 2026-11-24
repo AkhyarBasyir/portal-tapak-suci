@@ -86,7 +86,7 @@ export default function SiteHeader() {
                 Tapak Suci
               </span>
               <span className="block text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">
-                Surya Manggala Integra
+                Mutu-Muda
               </span>
             </span>
           </Link>

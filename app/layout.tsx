@@ -3,13 +3,13 @@ import './globals.css'
 import { SITE_URL } from '@/lib/constants'
 
 const DESKRIPSI =
-  'Portal resmi Tapak Suci Putera Muhammadiyah dan Sanggar Surya Manggala Integra: prestasi di gelanggang, seni pertunjukan pentas, jadwal latihan, dan berita organisasi.'
+  'Portal resmi Tapak Suci Mutu-Muda: prestasi di gelanggang, seni pertunjukan pentas, kegiatan, dan berita organisasi.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Portal Informasi Tapak Suci',
-    template: '%s | Tapak Suci',
+    default: 'Portal Informasi Tapak Suci Mutu-Muda',
+    template: '%s | Tapak Suci Mutu-Muda',
   },
   description: DESKRIPSI,
   verification: {

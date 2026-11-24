@@ -34,13 +34,13 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'Portal Informasi Tapak Suci',
   description:
-    'Portal resmi Tapak Suci Putera Muhammadiyah dan Sanggar Surya Manggala Integra: prestasi di gelanggang, seni pertunjukan pentas, kegiatan, dan berita organisasi.',
+    'Portal resmi Tapak Suci Mutu-Muda: prestasi di gelanggang, seni pertunjukan pentas, kegiatan, dan berita organisasi.',
 }
 
 type Baris = Record<string, any>
 
 const kontenDefault: Record<string, string> = {
-  hero_kicker: 'TAPAK SUCI × SURYA MANGGALA INTEGRA',
+  hero_kicker: 'TAPAK SUCI × MUTU-MUDA',
   hero_judul: 'Bela diri berprestasi. Seni yang berakhlak.',
   hero_deskripsi:
     'Dua semangat dalam satu wadah: prestasi di gelanggang dan keindahan pertunjukan pentas, berpijak pada Al-Qur\'an dan Sunnah.',
@@ -166,6 +166,10 @@ export default async function HomePage() {
 
   const fokus = fokusDb.length ? fokusDb : fokusDefault
   const prestasi = prestasiDb.length ? prestasiDb : prestasiDefault
+  const kickerTersimpan = nilai(konten, 'hero_kicker', 'judul', '')
+  const kicker = /surya\s+manggala\s+integra/i.test(kickerTersimpan)
+    ? 'TAPAK SUCI × MUTU-MUDA'
+    : kickerTersimpan || kontenDefault.hero_kicker
 
   return (
     <>
@@ -193,7 +197,7 @@ export default async function HomePage() {
         <div className="container-page relative grid gap-14 py-20 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-28">
           <div className="animate-fade-up">
             <span className="inline-flex animate-fade-up items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-amber-200">
-              <Sparkles size={13} /> {teks('hero_kicker')}
+              <Sparkles size={13} /> {kicker}
             </span>
 
             <h1 className="mt-7 max-w-2xl text-[2.6rem] font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.9rem]">
