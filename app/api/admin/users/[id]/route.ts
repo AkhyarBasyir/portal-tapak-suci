@@ -26,11 +26,11 @@ export async function PATCH(
   }
 
   const nama = String(body.full_name ?? '').trim()
-  const username = String(body.username ?? '').trim().toLowerCase()
+  const username = body.username === undefined ? undefined : String(body.username).trim().toLowerCase()
   const email = String(body.email ?? '').trim().toLowerCase()
-  let role = String(body.role ?? 'anggota')
-  const jabatan = String(body.jabatan ?? '').trim()
-  const telepon = String(body.telepon ?? '').trim()
+  const roleDiminta = body.role === undefined ? undefined : String(body.role)
+  const jabatan = body.jabatan === undefined ? undefined : String(body.jabatan).trim()
+  const telepon = body.telepon === undefined ? undefined : String(body.telepon).trim()
   const password = String(body.password ?? '')
 
   if (!nama) {
@@ -39,7 +39,7 @@ export async function PATCH(
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
     return Response.json({ error: 'Email wajib diisi dengan format yang benar.' }, { status: 400 })
   }
-  if (!(ROLES as readonly string[]).includes(role)) {
+  if (roleDiminta !== undefined && !(ROLES as readonly string[]).includes(roleDiminta)) {
     return Response.json({ error: 'Peran tidak dikenal.' }, { status: 400 })
   }
   if (password && password.length < 6) {
@@ -58,7 +58,7 @@ export async function PATCH(
 
     const { data: targetProfile } = await admin
       .from('profiles')
-      .select('role')
+      .select('role, username, jabatan, telepon')
       .eq('id', id)
       .maybeSingle()
 
@@ -66,6 +66,8 @@ export async function PATCH(
       return Response.json({ error: 'Profil pengguna tidak ditemukan.' }, { status: 404 })
     }
     const targetRole = targetProfile.role as Role
+    // Field yang tidak dikirim tidak boleh menimpa data lama.
+    let role = roleDiminta ?? targetRole
 
     // Pengurus hanya boleh menyentuh akun anggota, tidak boleh admin/pengurus.
     if (!canManageAccount(session.profile.role, targetRole)) {
@@ -104,11 +106,11 @@ export async function PATCH(
       .from('profiles')
       .update({
         full_name: nama,
-        username: username || null,
+        username: username === undefined ? targetProfile.username ?? null : username || null,
         email,
         role,
-        jabatan: jabatan || null,
-        telepon: telepon || null,
+        jabatan: jabatan === undefined ? targetProfile.jabatan ?? null : jabatan || null,
+        telepon: telepon === undefined ? targetProfile.telepon ?? null : telepon || null,
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)

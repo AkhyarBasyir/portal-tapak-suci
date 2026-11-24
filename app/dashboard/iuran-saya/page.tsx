@@ -27,6 +27,7 @@ const jumlah = (rows: any[]) =>
 export default async function IuranSayaPage() {
   const session = await getSessionProfile()
   if (!session) redirect('/login?next=%2Fdashboard%2Fiuran-saya')
+  if (session.profile.role !== 'anggota') redirect('/dashboard')
 
   const anggota = await getAnggotaSaya(session.user.email ?? session.profile.email)
   const iuran = anggota ? await getIuranSaya(anggota.id) : []

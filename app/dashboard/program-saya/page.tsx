@@ -19,6 +19,7 @@ export const metadata = {
 export default async function ProgramSayaPage() {
   const session = await getSessionProfile()
   if (!session) redirect('/login?next=%2Fdashboard%2Fprogram-saya')
+  if (session.profile.role !== 'anggota') redirect('/dashboard')
 
   const [umum, khusus, penerima] = await Promise.all([
     getProgramLatihanUmum(true),
