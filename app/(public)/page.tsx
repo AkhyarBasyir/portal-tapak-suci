@@ -189,6 +189,7 @@ export default async function HomePage() {
           <div className="stage-grid absolute inset-0 opacity-70" />
           <div className="nusantara-motif absolute inset-0 opacity-70" />
           <div className="noise-overlay" />
+          <div aria-hidden="true" className="hero-sweep" />
           <div className="absolute -left-32 top-10 h-96 w-96 animate-pulse-glow rounded-full bg-brand-500/25 blur-3xl" />
           <div className="absolute -right-20 bottom-0 h-96 w-96 animate-aura rounded-full bg-amber-500/10 blur-3xl" />
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#140808] to-transparent" />
@@ -269,6 +270,32 @@ export default async function HomePage() {
               </div>
             </div>
 
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-8 hidden sm:block"
+            >
+              <div className="absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2">
+                <div className="h-full w-full animate-orbit-spin rounded-full border border-dashed border-amber-200/20" />
+              </div>
+              <div className="absolute left-1/2 top-1/2 h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2">
+                <div className="relative h-full w-full animate-orbit-spin">
+                  <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
+                    <span className="animate-orbit-counter inline-flex items-center gap-1.5 rounded-full border border-amber-200/30 bg-[#2a0b0b]/85 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-amber-100 shadow-lg backdrop-blur">
+                      <Trophy size={12} /> Gelanggang
+                    </span>
+                  </span>
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
+                    <span className="animate-orbit-counter inline-flex items-center gap-1.5 rounded-full border border-amber-200/30 bg-[#2a0b0b]/85 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-amber-100 shadow-lg backdrop-blur">
+                      <Sparkles size={12} /> Pentas
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span className="animate-pulse-glow block h-2 w-2 rounded-full bg-amber-300/80 shadow-[0_0_22px_6px_rgba(251,191,36,0.35)]" />
+              </div>
+            </div>
+
             <div className="absolute -left-6 top-10 hidden animate-float rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl sm:block">
               <Swords size={22} className="text-amber-200" />
               <p className="mt-2 text-xs font-bold">Pencak Silat Tapak Suci</p>
@@ -291,7 +318,7 @@ export default async function HomePage() {
                 <span key={loop} className="flex items-center gap-8">
                   <span>Pencak Silat Tapak Suci</span>
                   <span className="text-amber-300/70">✦</span>
-                  <span>Surya Manggala Integra</span>
+                  <span>Tapak Suci Mutu-Muda</span>
                   <span className="text-amber-300/70">✦</span>
                   <span>Prestasi di Gelanggang</span>
                   <span className="text-amber-300/70">✦</span>

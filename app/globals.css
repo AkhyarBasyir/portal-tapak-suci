@@ -113,6 +113,51 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
 }
 
+/* Sapuan cahaya tipis di hero: hanya transform + opacity agar ringan. */
+.hero-sweep {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-sweep::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 30%;
+  width: 14rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(251, 191, 36, 0.14) 45%,
+    rgba(255, 255, 255, 0.08) 60%,
+    transparent
+  );
+  transform: skewX(-18deg) translateX(-140%);
+  animation: hero-sweep 11s ease-in-out infinite;
+}
+
+@keyframes hero-sweep {
+  0%,
+  12% {
+    transform: skewX(-18deg) translateX(-140%);
+    opacity: 0;
+  }
+  28% {
+    opacity: 0.9;
+  }
+  62% {
+    opacity: 0.55;
+  }
+  82%,
+  100% {
+    transform: skewX(-18deg) translateX(420%);
+    opacity: 0;
+  }
+}
+
 .stage-grid {
   background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),

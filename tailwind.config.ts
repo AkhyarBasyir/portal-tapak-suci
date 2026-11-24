@@ -29,6 +29,14 @@ const config: Config = {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-12px)' },
         },
+        'orbit-spin': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        'orbit-counter': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(-360deg)' },
+        },
         aura: {
           '0%': { transform: 'translate3d(0, 0, 0) scale(1)', opacity: '0.5' },
           '100%': { transform: 'translate3d(40px, -30px, 0) scale(1.18)', opacity: '0.8' },
@@ -75,6 +83,8 @@ const config: Config = {
       animation: {
         'fade-up': 'fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both',
         float: 'float 7s ease-in-out infinite',
+        'orbit-spin': 'orbit-spin 22s linear infinite',
+        'orbit-counter': 'orbit-counter 22s linear infinite',
         aura: 'aura 12s ease-in-out infinite alternate',
         shine: 'shine 1.1s ease-in-out',
         shake: 'shake 0.4s ease-in-out',
