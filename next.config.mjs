@@ -32,6 +32,31 @@ const nextConfig = {
         destination: '/dashboard/raport_atlet?tab=kepribadian',
         permanent: false,
       },
+      {
+        source: '/dashboard/konten-beranda',
+        destination: '/dashboard/beranda_konten',
+        permanent: false,
+      },
+      {
+        source: '/dashboard/kegiatan',
+        destination: '/dashboard/beranda_konten?tab=kegiatan',
+        permanent: false,
+      },
+      {
+        source: '/dashboard/berita',
+        destination: '/dashboard/beranda_konten?tab=berita',
+        permanent: false,
+      },
+      {
+        source: '/dashboard/prestasi',
+        destination: '/dashboard/beranda_konten?tab=prestasi',
+        permanent: false,
+      },
+      {
+        source: '/dashboard/media',
+        destination: '/dashboard/beranda_konten?tab=media',
+        permanent: false,
+      },
     ]
   },
 }

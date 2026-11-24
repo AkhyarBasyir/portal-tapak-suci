@@ -34,10 +34,8 @@ Website portal informasi organisasi dengan CRUD lengkap, database cloud, login, 
 - **Halaman masuk yang elegan dan responsif**: pemilih peran interaktif, tampilkan/sembunyikan kata sandi, peringatan Caps Lock, serta opsi mengingat username (kata sandi tidak pernah disimpan)
 - **Ringkasan** statistik
 - CRUD **Anggota & jabatan**
-- CRUD **Jadwal latihan/kegiatan**
+- **Konten Beranda** (`/dashboard/beranda_konten`) untuk pengurus: satu halaman bertab untuk **Teks Beranda**, **Kegiatan**, **Berita**, **Prestasi**, dan **Dokumen & Galeri**; link lama otomatis diarahkan ke tab yang sesuai
 - **Kelola Program Latihan** (`/dashboard/program-latihan`): form lengkap untuk program umum dan khusus, pilih hari/bulan, rentang tanggal, jam, target, kuota, upload gambar, serta kirim ke semua anggota atau beberapa akun tertentu
-- CRUD **Berita & pengumuman**
-- CRUD **Dokumen & galeri** (upload file/foto)
 - CRUD **Keuangan & kas** (bukti transaksi di bucket privat)
 - CRUD **Iuran anggota**
 - **Pengguna** (khusus admin): tambah & ubah akun (admin/pengurus/anggota), atur peran, dan ganti password pengguna lain—semuanya dalam satu menu
